@@ -1,0 +1,168 @@
+20-Day Development Plan
+Day 1 – Project Setup & Planning
+
+Understand project requirements
+
+Finalize features (Student, Company roles)
+
+Create GitHub repository
+
+Setup virtual environment
+
+Install FastAPI, Uvicorn, SQLAlchemy
+
+Day 2 – FastAPI Basics Refresh
+
+Routing & request methods
+
+Path & query parameters
+
+Pydantic schemas
+
+Swagger documentation
+
+Day 3 – Project Structure
+
+Create folder structure (models, schemas, routers)
+
+Setup main.py
+
+Configure database connection
+
+Day 4 – Database Design
+
+Design ER diagram
+
+Create SQLAlchemy models (User, Company)
+
+Setup migrations (optional)
+
+Day 5 – Authentication Basics
+
+Password hashing
+
+User registration endpoint
+
+User login endpoint
+
+Day 6 – JWT Authentication
+
+JWT token generation
+
+Token validation
+
+Secure protected routes
+
+Day 7 – Role-Based Access Control
+
+Student vs Company access
+
+Dependency-based authorization
+
+Permission checks
+
+Day 8 – Company Module
+
+Company profile creation
+
+Update company details
+
+Fetch company info
+
+Day 9 – Internship Model
+
+Internship SQLAlchemy model
+
+Pydantic schemas
+
+Relationship with company
+
+Day 10 – Internship CRUD APIs
+
+Create internship (Company)
+
+Update internship
+
+Delete internship
+
+Get internship details
+
+Day 11 – Internship Listing & Filters
+
+List internships
+
+Filters (city, skills, duration)
+
+Pagination & sorting
+
+Day 12 – Application Model
+
+Application table
+
+Relations with student & internship
+
+Status field
+
+Day 13 – Apply for Internship API
+
+Apply endpoint
+
+Prevent duplicate applications
+
+Save CV path
+
+Day 14 – CV Upload System
+
+Upload CV (PDF only)
+
+File validation
+
+Store CV securely
+
+Day 15 – Student Dashboard APIs
+
+View applied internships
+
+View application status
+
+Day 16 – Company Dashboard APIs
+
+View applicants
+
+Change application status
+
+Basic statistics
+
+Day 17 – Error Handling & Validation
+
+Custom exceptions
+
+Response consistency
+
+Edge-case handling
+
+Day 18 – Security Improvements
+
+Token expiration
+
+Rate limiting (basic)
+
+Input sanitization
+
+Day 19 – Testing & Debugging
+
+Manual API testing (Swagger/Postman)
+
+Fix bugs
+
+Refactor messy code
+
+Day 20 – Documentation & Polish
+
+Write README.md
+
+API usage examples
+
+Prepare resume bullet points
+
+Final cleanup

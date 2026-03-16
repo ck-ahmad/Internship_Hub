@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InternHub — Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:      #080c14;
+      --surface: #0e1420;
+      --card:    #111827;
+      --border:  rgba(255,255,255,0.08);
+      --gold:    #c9a84c;
+      --gold2:   #e8c97a;
+      --blue:    #3b82f6;
+      --green:   #10b981;
+      --red:     #ef4444;
+      --text:    #f1f5f9;
+      --muted:   #64748b;
+      --subtle:  #1e293b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Cabinet Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+    /* grain */
+    body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; opacity:0.4; }
+
+    h1,h2,h3 { font-family:'Playfair Display', serif; }
+
+    nav { position:sticky; top:0; z-index:50; background:rgba(8,12,20,0.85); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); }
+
+    .btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#080c14; font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:13px; letter-spacing:0.04em; padding:10px 24px; border:none; cursor:pointer; transition:all 0.25s; text-transform:uppercase; display:inline-block; }
+    .btn-gold:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(201,168,76,0.35); }
+
+    .btn-ghost { background:transparent; color:var(--text); font-family:'Cabinet Grotesk',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.03em; padding:10px 24px; border:1px solid var(--border); cursor:pointer; transition:all 0.2s; text-transform:uppercase; display:inline-block; }
+    .btn-ghost:hover { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.06); }
+
+    .btn-danger { background:rgba(239,68,68,0.12); color:var(--red); font-family:'Cabinet Grotesk',sans-serif; font-weight:700; font-size:11px; padding:6px 14px; border:1px solid rgba(239,68,68,0.3); cursor:pointer; transition:all 0.2s; text-transform:uppercase; letter-spacing:0.04em; }
+    .btn-danger:hover { background:rgba(239,68,68,0.2); }
+
+    .tag { display:inline-block; font-family:'Cabinet Grotesk',sans-serif; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; padding:3px 10px; }
+    .tag-gold   { color:var(--gold2); background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.25); }
+    .tag-blue   { color:#93c5fd; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.25); }
+    .tag-green  { color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.25); }
+    .tag-gray   { color:var(--muted); background:rgba(100,116,139,0.1); border:1px solid rgba(100,116,139,0.2); }
+    .tag-purple { color:#c4b5fd; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.25); }
+
+    input, select, textarea { width:100%; background:var(--subtle); border:1px solid var(--border); color:var(--text); padding:11px 16px; font-family:'Cabinet Grotesk',sans-serif; font-size:14px; outline:none; transition:border-color 0.2s, box-shadow 0.2s; }
+    input:focus, select:focus, textarea:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,0.08); }
+    input::placeholder, textarea::placeholder { color:var(--muted); }
+
+    label { font-family:'Cabinet Grotesk',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); display:block; margin-bottom:6px; }
+
+    .section-card { background:var(--card); border:1px solid var(--border); padding:28px; margin-bottom:16px; position:relative; overflow:hidden; transition:border-color 0.3s; }
+    .section-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(201,168,76,0.3),transparent); opacity:0; transition:opacity 0.3s; }
+    .section-card:hover { border-color:rgba(201,168,76,0.15); }
+    .section-card:hover::before { opacity:1; }
+
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:100; }
+    .modal-box { background:var(--card); border:1px solid rgba(201,168,76,0.2); padding:36px; max-width:520px; width:92%; max-height:90vh; overflow-y:auto; box-shadow:0 40px 80px rgba(0,0,0,0.6); animation:fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+    .toast { position:fixed; bottom:28px; right:28px; background:var(--card); border:1px solid var(--gold); color:var(--text); font-family:'Cabinet Grotesk',sans-serif; font-weight:700; font-size:13px; padding:14px 22px; z-index:999; opacity:0; transform:translateY(12px); transition:all 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow:0 8px 32px rgba(0,0,0,0.5); }
+    .toast.show { opacity:1; transform:translateY(0); }
+    .toast.error { border-color:var(--red); }
+
+    .skeleton { background:linear-gradient(90deg,var(--card) 25%,var(--subtle) 50%,var(--card) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; }
+    @keyframes shimmer { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
+
+    .logo-mark { width:32px; height:32px; background:linear-gradient(135deg,var(--gold),var(--gold2)); display:flex; align-items:center; justify-content:center; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); }
+
+    /* Cover */
+    .cover-area { height:220px; position:relative; overflow:hidden; cursor:pointer; background:linear-gradient(135deg,#0e1420 0%,#1e3a5f 50%,#0e1420 100%); }
+    .cover-area img { width:100%; height:100%; object-fit:cover; }
+    .cover-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; }
+    .cover-area:hover .cover-overlay { opacity:1; }
+
+    /* Avatar */
+    .avatar-wrap { position:relative; display:inline-block; cursor:pointer; }
+    .avatar-wrap:hover .avatar-overlay { opacity:1; }
+    .avatar-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.5); border-radius:9999px; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; }
+
+    /* Timeline item */
+    .timeline-item { padding:20px 0; border-bottom:1px solid var(--border); }
+    .timeline-item:last-child { border-bottom:none; padding-bottom:0; }
+
+    /* Icon box */
+    .icon-box { width:44px; height:44px; background:var(--subtle); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+    a { color:inherit; text-decoration:none; }
+
+    .hdivider { border:none; border-top:1px solid var(--border); margin:24px 0; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+      <div class="logo-mark">
+        <span style="color:#080c14;font-weight:900;font-size:13px;font-family:'Cabinet Grotesk',sans-serif">IH</span>
+      </div>
+      <span style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-0.02em">InternHub</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="nav-name" style="font-size:13px;font-weight:700;color:var(--muted)"></span>
+      <a href="/" class="btn-ghost" style="padding:8px 18px;font-size:12px">← Back</a>
+    </div>
+  </div>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<!-- LOADING STATE -->
+<div id="page-loading" style="max-width:900px;margin:0 auto;padding:40px 24px">
+  <div class="skeleton" style="height:220px;margin-bottom:0"></div>
+  <div style="background:var(--card);border:1px solid var(--border);border-top:none;padding:24px">
+    <div class="skeleton" style="height:20px;width:180px;margin-bottom:12px"></div>
+    <div class="skeleton" style="height:14px;width:280px"></div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div id="page-profile" style="display:none;max-width:900px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1">
+
+  <!-- COVER + AVATAR CARD -->
+  <div style="background:var(--card);border:1px solid var(--border);overflow:hidden;margin-bottom:16px">
+
+    <!-- Cover -->
+    <div class="cover-area" id="cover-area" onclick="isOwner && triggerCoverUpload()">
+      <img id="cover-img" src="" alt="" style="display:none"/>
+      <!-- default gradient cover with grid -->
+      <div id="cover-placeholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#080c14,#1a2744);position:relative">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:40px 40px"></div>
+        <span style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:rgba(201,168,76,0.25);letter-spacing:0.2em;text-transform:uppercase">Cover Photo</span>
+      </div>
+      <div class="cover-overlay">
+        <span style="font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:12px;color:white;text-transform:uppercase;letter-spacing:0.08em">📷 Change Cover</span>
+      </div>
+    </div>
+
+    <!-- Avatar + actions row -->
+    <div style="padding:0 28px 28px">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:-44px">
+
+        <!-- Avatar -->
+        <div class="avatar-wrap" onclick="isOwner && triggerPhotoUpload()">
+          <div id="avatar-circle" style="width:88px;height:88px;border-radius:9999px;border:3px solid var(--card);background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center">
+            <span id="avatar-letter" style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#080c14">?</span>
+          </div>
+          <img id="avatar-img" src="" alt="" style="width:88px;height:88px;border-radius:9999px;border:3px solid var(--card);object-fit:cover;display:none"/>
+          <div class="avatar-overlay edit-btn">
+            <span style="font-size:18px">📷</span>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div id="profile-actions" style="display:flex;gap:8px;margin-top:8px"></div>
+      </div>
+
+      <!-- Name + headline -->
+      <div style="margin-top:16px">
+        <h1 id="profile-name" style="font-size:26px;font-weight:700;margin-bottom:6px">—</h1>
+        <p id="profile-headline" style="font-size:15px;color:var(--muted);margin-bottom:6px"></p>
+        <p id="profile-location" style="font-size:13px;color:var(--muted)"></p>
+
+        <!-- Social links -->
+        <div id="social-links" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 style="font-size:18px;font-weight:700">About</h2>
+      <button class="btn-ghost edit-btn" onclick="openEditAbout()" style="padding:6px 16px;font-size:11px">Edit</button>
+    </div>
+    <p id="about-text" style="font-size:14px;color:var(--muted);line-height:1.8">No bio added yet.</p>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 style="font-size:18px;font-weight:700">Skills</h2>
+      <button class="btn-ghost edit-btn" onclick="openEditSkills()" style="padding:6px 16px;font-size:11px">Edit</button>
+    </div>
+    <div id="skills-tags" style="display:flex;flex-wrap:wrap;gap:8px">
+      <span style="font-size:13px;color:var(--muted)">No skills added yet.</span>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 style="font-size:18px;font-weight:700">Experience</h2>
+      <button class="btn-gold edit-btn" onclick="openAddExp()" style="padding:7px 16px;font-size:11px">+ Add</button>
+    </div>
+    <div id="exp-list">
+      <span style="font-size:13px;color:var(--muted)">No experience added yet.</span>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 style="font-size:18px;font-weight:700">Education</h2>
+      <button class="btn-gold edit-btn" onclick="openAddEdu()" style="padding:7px 16px;font-size:11px">+ Add</button>
+    </div>
+    <div id="edu-list">
+      <span style="font-size:13px;color:var(--muted)">No education added yet.</span>
+    </div>
+  </div>
+
+  <!-- RESUME -->
+  <div class="section-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 style="font-size:18px;font-weight:700">Resume / CV</h2>
+      <label class="btn-gold edit-btn" style="padding:7px 16px;font-size:11px;cursor:pointer">
+        Upload PDF
+        <input type="file" accept=".pdf" style="display:none;width:auto" onchange="uploadCV(this)"/>
+      </label>
+    </div>
+    <div id="cv-section">
+      <span style="font-size:13px;color:var(--muted)">No CV uploaded yet.</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: Edit Profile Info -->
+<div id="modal-about" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-about')">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div class="tag tag-gold" style="margin-bottom:8px">Edit Info</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">Profile Details</h3>
+      </div>
+      <button onclick="closeModal('modal-about')" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label>Headline</label><input type="text" id="edit-headline" placeholder="e.g. Final Year CS Student at FAST"/></div>
+      <div><label>Location</label><input type="text" id="edit-location" placeholder="e.g. Lahore, Pakistan"/></div>
+      <div><label>About / Bio</label><textarea id="edit-bio" rows="4" placeholder="Tell people about yourself..." style="resize:vertical"></textarea></div>
+      <div style="border-top:1px solid var(--border);padding-top:16px">
+        <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:14px">Social Links</p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div><label>LinkedIn URL</label><input type="text" id="edit-linkedin" placeholder="https://linkedin.com/in/yourname"/></div>
+          <div><label>GitHub URL</label><input type="text" id="edit-github" placeholder="https://github.com/yourname"/></div>
+          <div><label>Website / Portfolio</label><input type="text" id="edit-website" placeholder="https://yourwebsite.com"/></div>
+        </div>
+      </div>
+      <button onclick="saveAbout()" class="btn-gold" style="padding:14px;width:100%;font-size:14px;margin-top:4px">Save Changes →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Edit Skills -->
+<div id="modal-skills" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-skills')">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div class="tag tag-blue" style="margin-bottom:8px">Skills</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">Edit Skills</h3>
+      </div>
+      <button onclick="closeModal('modal-skills')" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label>Skills (comma separated)</label><input type="text" id="edit-skills" placeholder="Python, FastAPI, React, SQL"/></div>
+      <p style="font-size:12px;color:var(--muted)">Each skill separated by a comma will appear as a tag on your profile</p>
+      <button onclick="saveSkills()" class="btn-gold" style="padding:14px;width:100%;font-size:14px">Save Skills →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Experience -->
+<div id="modal-exp" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-exp')">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div class="tag tag-green" style="margin-bottom:8px">Experience</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">Add Experience</h3>
+      </div>
+      <button onclick="closeModal('modal-exp')" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label>Job Title *</label><input type="text" id="exp-title" placeholder="Software Developer Intern"/></div>
+      <div><label>Company *</label><input type="text" id="exp-company" placeholder="Google, Meta, Startup..."/></div>
+      <div><label>Location</label><input type="text" id="exp-location" placeholder="Remote / Lahore, PK"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label>Start Date</label><input type="text" id="exp-start" placeholder="Jun 2024"/></div>
+        <div><label>End Date</label><input type="text" id="exp-end" placeholder="Aug 2024 or Present"/></div>
+      </div>
+      <div><label>Description</label><textarea id="exp-desc" rows="3" placeholder="What did you work on?" style="resize:vertical"></textarea></div>
+      <button onclick="saveExp()" class="btn-gold" style="padding:14px;width:100%;font-size:14px">Add Experience →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Education -->
+<div id="modal-edu" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-edu')">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div class="tag tag-purple" style="margin-bottom:8px">Education</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">Add Education</h3>
+      </div>
+      <button onclick="closeModal('modal-edu')" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label>School / University *</label><input type="text" id="edu-school" placeholder="FAST, LUMS, NUST..."/></div>
+      <div><label>Degree</label><input type="text" id="edu-degree" placeholder="BS, MS, BE..."/></div>
+      <div><label>Field of Study</label><input type="text" id="edu-field" placeholder="Computer Science"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label>Start Year</label><input type="text" id="edu-start" placeholder="2021"/></div>
+        <div><label>End Year</label><input type="text" id="edu-end" placeholder="2025 or Present"/></div>
+      </div>
+      <div><label>Description</label><textarea id="edu-desc" rows="2" placeholder="Activities, achievements..." style="resize:vertical"></textarea></div>
+      <button onclick="saveEdu()" class="btn-gold" style="padding:14px;width:100%;font-size:14px">Add Education →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file inputs -->
+<input type="file" id="photo-input" accept=".jpg,.jpeg,.png,.webp" style="display:none" onchange="uploadPhoto(this)"/>
+<input type="file" id="cover-input" accept=".jpg,.jpeg,.png,.webp" style="display:none" onchange="uploadCoverPhoto(this)"/>
+
+<script>
+  const API   = "http://localhost:8000";
+  const token = localStorage.getItem("token");
+  const myId  = parseInt(localStorage.getItem("user_id") || "0");
+  let isOwner = false;
+  let profile = null;
+
+  const urlParams  = new URLSearchParams(window.location.search);
+  const viewUserId = parseInt(urlParams.get("user_id") || "0");
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const name = localStorage.getItem("name");
+    if (name) document.getElementById("nav-name").textContent = name;
+    loadProfile();
+  });
+
+  async function loadProfile() {
+    try {
+      let data;
+      if (!viewUserId && token) {
+        const res = await fetch(`${API}/profiles/me`, { headers: { "Authorization": `Bearer ${token}` } });
+        if (!res.ok) throw new Error();
+        data = await res.json();
+        isOwner = true;
+        const uid = localStorage.getItem("user_id");
+        if (uid) data.user_id = parseInt(uid);
+        data.user_name = localStorage.getItem("name");
+        data.user_role = localStorage.getItem("role");
+      } else {
+        const uid = viewUserId || myId;
+        const res = await fetch(`${API}/profiles/${uid}`);
+        if (!res.ok) throw new Error("Profile not found");
+        data    = await res.json();
+        isOwner = !!(token && data.user_id === myId);
+      }
+      profile = data;
+      renderProfile(data);
+    } catch {
+      document.getElementById("page-loading").innerHTML = `
+        <div style="text-align:center;padding:80px 0;color:var(--muted)">
+          <div style="font-size:52px;margin-bottom:20px">👤</div>
+          <p style="font-family:'Playfair Display',serif;font-size:24px;color:var(--text);margin-bottom:8px">Profile Not Found</p>
+          <p style="font-size:14px;margin-bottom:28px">This user hasn't set up their profile yet.</p>
+          <a href="/" class="btn-gold" style="padding:12px 32px">← Go Home</a>
+        </div>`;
+    }
+  }
+
+  function renderProfile(data) {
+    document.getElementById("page-loading").style.display = "none";
+    document.getElementById("page-profile").style.display = "block";
+
+    const name = data.user_name || "User";
+    document.title = `${name} — InternHub`;
+
+    // avatar
+    document.getElementById("avatar-letter").textContent = name.charAt(0).toUpperCase();
+    if (data.photo_path) {
+      document.getElementById("avatar-circle").style.display = "none";
+      const img = document.getElementById("avatar-img");
+      img.src = `${API}/${data.photo_path}`;
+      img.style.display = "block";
+    }
+
+    // cover
+    if (data.cover_path) {
+      document.getElementById("cover-placeholder").style.display = "none";
+      const img = document.getElementById("cover-img");
+      img.src = `${API}/${data.cover_path}`;
+      img.style.display = "block";
+    }
+
+    // text fields
+    document.getElementById("profile-name").textContent     = name;
+    document.getElementById("profile-headline").textContent = data.headline || (isOwner ? "Add a headline to introduce yourself" : "");
+    document.getElementById("profile-location").textContent = data.location ? `📍 ${data.location}` : "";
+    document.getElementById("about-text").textContent       = data.bio || (isOwner ? "Click Edit to add your bio and tell people about yourself." : "No bio added.");
+
+    // role badge
+    if (data.user_role) {
+      const badge = data.user_role === "company"
+        ? `<span class="tag tag-gold">${data.user_role}</span>`
+        : `<span class="tag tag-blue">${data.user_role}</span>`;
+      document.getElementById("profile-name").innerHTML = `${name} <span style="margin-left:8px">${badge}</span>`;
+    }
+
+    // social links
+    const socials = [];
+    if (data.linkedin_url) socials.push(`<a href="${data.linkedin_url}" target="_blank" class="tag tag-blue" style="text-decoration:none;padding:5px 12px">🔗 LinkedIn</a>`);
+    if (data.github_url)   socials.push(`<a href="${data.github_url}"   target="_blank" class="tag tag-gray" style="text-decoration:none;padding:5px 12px">⌨️ GitHub</a>`);
+    if (data.website_url)  socials.push(`<a href="${data.website_url}"  target="_blank" class="tag tag-gold" style="text-decoration:none;padding:5px 12px">🌐 Website</a>`);
+    document.getElementById("social-links").innerHTML = socials.length
+      ? socials.join("")
+      : (isOwner ? '<span style="font-size:12px;color:var(--muted)">Add LinkedIn, GitHub or website links</span>' : "");
+
+    // skills
+    if (data.skills && data.skills.trim()) {
+      const tags = data.skills.split(",").map(s =>
+        `<span class="tag tag-blue" style="padding:5px 12px">${s.trim()}</span>`
+      ).join("");
+      document.getElementById("skills-tags").innerHTML = tags;
+    }
+
+    // experience + education
+    renderExpList(data.experience || []);
+    renderEduList(data.education  || []);
+
+    // CV
+    if (data.cv_path) {
+      document.getElementById("cv-section").innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--subtle);border:1px solid var(--border);padding:16px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:44px;height:44px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);display:flex;align-items:center;justify-content:center">
+              <span style="font-size:10px;font-weight:800;color:#fca5a5;letter-spacing:0.06em">PDF</span>
+            </div>
+            <div>
+              <p style="font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:14px">Resume.pdf</p>
+              <p style="font-size:12px;color:var(--muted);margin-top:2px">Uploaded & ready to share</p>
+            </div>
+          </div>
+          <a href="${API}/${data.cv_path}" target="_blank" class="btn-ghost" style="padding:8px 16px;font-size:11px;text-decoration:none">Download</a>
+        </div>`;
+    }
+
+    // action buttons
+    const actions = document.getElementById("profile-actions");
+    if (isOwner) {
+      actions.innerHTML = `<button onclick="openEditAbout()" class="btn-gold" style="padding:9px 20px;font-size:12px">Edit Profile</button>`;
+    } else if (token) {
+      actions.innerHTML = `<button class="btn-ghost" style="padding:9px 20px;font-size:12px">Connect</button>`;
+    } else {
+      actions.innerHTML = `<a href="/" class="btn-gold" style="padding:9px 20px;font-size:12px">Log In to Connect</a>`;
+    }
+
+    // hide edit buttons for visitors
+    if (!isOwner) {
+      document.querySelectorAll(".edit-btn").forEach(el => el.style.display = "none");
+    }
+  }
+
+  function renderExpList(list) {
+    const container = document.getElementById("exp-list");
+    if (!list.length) {
+      container.innerHTML = `<span style="font-size:13px;color:var(--muted)">No experience added yet.</span>`;
+      return;
+    }
+    container.innerHTML = list.map(e => `
+      <div class="timeline-item">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+          <div style="display:flex;gap:14px;flex:1">
+            <div class="icon-box">💼</div>
+            <div style="flex:1">
+              <h4 style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:3px">${e.title}</h4>
+              <p style="font-size:13px;color:var(--gold);font-weight:600;margin-bottom:3px">${e.company}${e.location ? ' &nbsp;·&nbsp; ' + e.location : ''}</p>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:${e.description ? '10px' : '0'}">
+                ${e.start_date || ''}${e.end_date ? ' — ' + e.end_date : ''}
+              </p>
+              ${e.description ? `<p style="font-size:13px;color:var(--muted);line-height:1.6">${e.description}</p>` : ''}
+            </div>
+          </div>
+          ${isOwner ? `<button onclick="deleteExp(${e.id})" class="btn-danger" style="flex-shrink:0">✕ Remove</button>` : ''}
+        </div>
+      </div>`).join("");
+  }
+
+  function renderEduList(list) {
+    const container = document.getElementById("edu-list");
+    if (!list.length) {
+      container.innerHTML = `<span style="font-size:13px;color:var(--muted)">No education added yet.</span>`;
+      return;
+    }
+    container.innerHTML = list.map(e => `
+      <div class="timeline-item">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+          <div style="display:flex;gap:14px;flex:1">
+            <div class="icon-box">🎓</div>
+            <div style="flex:1">
+              <h4 style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:3px">${e.school}</h4>
+              <p style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:3px">
+                ${e.degree || ''}${e.field ? ' &nbsp;·&nbsp; ' + e.field : ''}
+              </p>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:${e.description ? '10px' : '0'}">
+                ${e.start_year || ''}${e.end_year ? ' — ' + e.end_year : ''}
+              </p>
+              ${e.description ? `<p style="font-size:13px;color:var(--muted);line-height:1.6">${e.description}</p>` : ''}
+            </div>
+          </div>
+          ${isOwner ? `<button onclick="deleteEdu(${e.id})" class="btn-danger" style="flex-shrink:0">✕ Remove</button>` : ''}
+        </div>
+      </div>`).join("");
+  }
+
+  // EDIT MODALS
+  function openEditAbout() {
+    document.getElementById("edit-headline").value = profile.headline     || "";
+    document.getElementById("edit-location").value = profile.location     || "";
+    document.getElementById("edit-bio").value       = profile.bio          || "";
+    document.getElementById("edit-linkedin").value  = profile.linkedin_url || "";
+    document.getElementById("edit-github").value    = profile.github_url   || "";
+    document.getElementById("edit-website").value   = profile.website_url  || "";
+    document.getElementById("modal-about").classList.remove("hidden");
+  }
+
+  async function saveAbout() {
+    await updateProfile({
+      headline:     document.getElementById("edit-headline").value,
+      location:     document.getElementById("edit-location").value,
+      bio:          document.getElementById("edit-bio").value,
+      linkedin_url: document.getElementById("edit-linkedin").value,
+      github_url:   document.getElementById("edit-github").value,
+      website_url:  document.getElementById("edit-website").value,
+    });
+    closeModal("modal-about");
+  }
+
+  function openEditSkills() {
+    document.getElementById("edit-skills").value = profile.skills || "";
+    document.getElementById("modal-skills").classList.remove("hidden");
+  }
+
+  async function saveSkills() {
+    await updateProfile({ skills: document.getElementById("edit-skills").value });
+    closeModal("modal-skills");
+  }
+
+  async function updateProfile(body) {
+    try {
+      const res = await fetch(`${API}/profiles/me`, {
+        method: "PUT",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error();
+      profile = await res.json();
+      profile.user_name = localStorage.getItem("name");
+      profile.user_role = localStorage.getItem("role");
+      renderProfile(profile);
+      toast("Profile updated!");
+    } catch { toast("Failed to update", true); }
+  }
+
+  // EXPERIENCE
+  function openAddExp() { document.getElementById("modal-exp").classList.remove("hidden"); }
+
+  async function saveExp() {
+    const title   = document.getElementById("exp-title").value.trim();
+    const company = document.getElementById("exp-company").value.trim();
+    if (!title || !company) return toast("Title and company are required", true);
+    try {
+      const res = await fetch(`${API}/profiles/me/experience`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title, company,
+          location:    document.getElementById("exp-location").value,
+          start_date:  document.getElementById("exp-start").value,
+          end_date:    document.getElementById("exp-end").value,
+          description: document.getElementById("exp-desc").value,
+        })
+      });
+      if (!res.ok) throw new Error();
+      ["exp-title","exp-company","exp-location","exp-start","exp-end","exp-desc"].forEach(id => document.getElementById(id).value = "");
+      closeModal("modal-exp");
+      toast("Experience added!");
+      await refreshProfile();
+    } catch { toast("Failed to add experience", true); }
+  }
+
+  async function deleteExp(id) {
+    if (!confirm("Remove this experience?")) return;
+    try {
+      await fetch(`${API}/profiles/me/experience/${id}`, { method:"DELETE", headers:{"Authorization":`Bearer ${token}`} });
+      toast("Removed"); await refreshProfile();
+    } catch { toast("Error", true); }
+  }
+
+  // EDUCATION
+  function openAddEdu() { document.getElementById("modal-edu").classList.remove("hidden"); }
+
+  async function saveEdu() {
+    const school = document.getElementById("edu-school").value.trim();
+    if (!school) return toast("School name is required", true);
+    try {
+      const res = await fetch(`${API}/profiles/me/education`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          school,
+          degree:      document.getElementById("edu-degree").value,
+          field:       document.getElementById("edu-field").value,
+          start_year:  document.getElementById("edu-start").value,
+          end_year:    document.getElementById("edu-end").value,
+          description: document.getElementById("edu-desc").value,
+        })
+      });
+      if (!res.ok) throw new Error();
+      ["edu-school","edu-degree","edu-field","edu-start","edu-end","edu-desc"].forEach(id => document.getElementById(id).value = "");
+      closeModal("modal-edu");
+      toast("Education added!");
+      await refreshProfile();
+    } catch { toast("Failed to add education", true); }
+  }
+
+  async function deleteEdu(id) {
+    if (!confirm("Remove this education?")) return;
+    try {
+      await fetch(`${API}/profiles/me/education/${id}`, { method:"DELETE", headers:{"Authorization":`Bearer ${token}`} });
+      toast("Removed"); await refreshProfile();
+    } catch { toast("Error", true); }
+  }
+
+  // FILE UPLOADS
+  function triggerPhotoUpload() { document.getElementById("photo-input").click(); }
+  function triggerCoverUpload() { document.getElementById("cover-input").click(); }
+
+  async function uploadPhoto(input) {
+    const file = input.files[0]; if (!file) return;
+    const form = new FormData(); form.append("photo", file);
+    try {
+      const res = await fetch(`${API}/profiles/me/photo`, { method:"POST", headers:{"Authorization":`Bearer ${token}`}, body:form });
+      if (!res.ok) throw new Error();
+      toast("Photo updated!"); await refreshProfile();
+    } catch { toast("Upload failed", true); }
+  }
+
+  async function uploadCoverPhoto(input) {
+    const file = input.files[0]; if (!file) return;
+    const form = new FormData(); form.append("cover", file);
+    try {
+      const res = await fetch(`${API}/profiles/me/cover`, { method:"POST", headers:{"Authorization":`Bearer ${token}`}, body:form });
+      if (!res.ok) throw new Error();
+      toast("Cover updated!"); await refreshProfile();
+    } catch { toast("Upload failed", true); }
+  }
+
+  async function uploadCV(input) {
+    const file = input.files[0]; if (!file) return;
+    const form = new FormData(); form.append("cv", file);
+    try {
+      const res = await fetch(`${API}/profiles/me/cv`, { method:"POST", headers:{"Authorization":`Bearer ${token}`}, body:form });
+      if (!res.ok) throw new Error();
+      toast("CV uploaded!"); await refreshProfile();
+    } catch { toast("Upload failed", true); }
+  }
+
+  async function refreshProfile() {
+    const res = await fetch(`${API}/profiles/me`, { headers:{"Authorization":`Bearer ${token}`} });
+    profile = await res.json();
+    profile.user_name = localStorage.getItem("name");
+    profile.user_role = localStorage.getItem("role");
+    renderProfile(profile);
+  }
+
+  // MODALS + TOAST
+  function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
+  function closeIfOutside(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+  function toast(msg, isError = false) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.className = "toast show" + (isError ? " error" : "");
+    setTimeout(() => el.classList.remove("show"), 3000);
+  }
+</script>
+</body>
+</html>

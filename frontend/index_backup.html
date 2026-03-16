@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InternHub — Find Your First Big Break</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink: #0d0d0d;
+      --paper: #f5f0e8;
+      --accent: #e84c2b;
+      --accent2: #2b5fe8;
+      --muted: #8a8278;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .syne { font-family: 'Syne', sans-serif; }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      padding: 10px 24px;
+      border: 2px solid var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      padding: 10px 24px;
+      border: 2px solid var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { background: var(--ink); color: var(--paper); }
+
+    .btn-danger {
+      background: var(--accent);
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      padding: 8px 18px;
+      border: 2px solid var(--accent);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card {
+      background: white;
+      border: 1.5px solid #e0d9ce;
+      padding: 24px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: 4px 4px 0px var(--ink); transform: translate(-2px,-2px); }
+
+    .tag {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 3px 10px;
+      border: 1.5px solid currentColor;
+    }
+
+    .tag-green { color: #1a7a4a; border-color: #1a7a4a; background: #edfaf3; }
+    .tag-red   { color: var(--accent); border-color: var(--accent); background: #fff0ed; }
+    .tag-blue  { color: var(--accent2); border-color: var(--accent2); background: #edf0ff; }
+    .tag-gray  { color: var(--muted); border-color: #ccc; background: #f8f8f6; }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1.5px solid #ccc;
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      background: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--ink); }
+
+    label {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+    .modal-box {
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .status-pending  { color: #b87d0a; background: #fff9e6; border-color: #b87d0a; }
+    .status-accepted { color: #1a7a4a; background: #edfaf3; border-color: #1a7a4a; }
+    .status-rejected { color: var(--accent); background: #fff0ed; border-color: var(--accent); }
+
+    nav { border-bottom: 2px solid var(--ink); }
+
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--ink); color: var(--paper);
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      padding: 14px 24px;
+      z-index: 999;
+      opacity: 0; transform: translateY(10px);
+      transition: all 0.3s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { background: var(--accent); }
+
+    .hero-line {
+      position: absolute;
+      background: var(--ink);
+      opacity: 0.07;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1.5px solid #e0d9ce;
+      margin: 0;
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #e8e3d8 25%, #f0ece3 50%, #e8e3d8 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      height: 120px;
+      margin-bottom: 16px;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="bg-white sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <button onclick="goHome()" class="flex items-center gap-2 hover:opacity-70 transition-opacity">
+      <div class="w-7 h-7 bg-black flex items-center justify-center">
+        <span class="text-white text-xs font-black syne">IH</span>
+      </div>
+      <span class="text-xl font-extrabold syne tracking-tight">InternHub</span>
+    </button>
+
+    <div id="nav-guest" class="flex items-center gap-3">
+      <button onclick="showPage('login')" class="btn-outline text-sm py-2 px-5">Log In</button>
+      <button onclick="showPage('register')" class="btn-primary text-sm py-2 px-5">Sign Up</button>
+    </div>
+
+    <div id="nav-auth" class="hidden flex items-center gap-4">
+      <span id="nav-username" class="text-sm font-medium syne opacity-60"></span>
+      <button onclick="showDashboard()" class="btn-outline text-sm py-2 px-5">Dashboard</button>
+      <button onclick="logout()" class="btn-primary text-sm py-2 px-5">Log Out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- ===================== PAGE: HOME ===================== -->
+<div id="page-home" class="page active">
+  <!-- Hero -->
+  <div class="relative overflow-hidden bg-white border-b-2 border-black py-20">
+    <!-- decorative lines -->
+    <div class="hero-line" style="top:0;left:30%;width:1px;height:100%"></div>
+    <div class="hero-line" style="top:0;left:60%;width:1px;height:100%"></div>
+    <div class="hero-line" style="top:40%;left:0;width:100%;height:1px"></div>
+
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="max-w-2xl">
+        <div class="tag tag-red mb-6">Now Live — 2025 Cohort</div>
+        <h1 class="text-6xl font-extrabold leading-none tracking-tight mb-6" style="font-family:Syne">
+          Find Your<br/>
+          <span style="color:var(--accent)">First Big</span><br/>
+          Break.
+        </h1>
+        <p class="text-lg text-gray-500 mb-10 max-w-lg leading-relaxed">
+          Connect with companies actively hiring interns. No fluff, no spam — just real opportunities posted by real teams.
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <button onclick="showPage('register')" class="btn-primary text-base px-8 py-3">Get Started Free</button>
+          <button onclick="loadInternships(); showPage('browse')" class="btn-outline text-base px-8 py-3">Browse Internships</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="border-b-2 border-black">
+    <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-3 divide-x-2 divide-black">
+      <div class="px-8 first:pl-0">
+        <div class="text-4xl font-extrabold syne">500+</div>
+        <div class="text-sm text-gray-500 mt-1">Active Internships</div>
+      </div>
+      <div class="px-8">
+        <div class="text-4xl font-extrabold syne">120+</div>
+        <div class="text-sm text-gray-500 mt-1">Companies Hiring</div>
+      </div>
+      <div class="px-8">
+        <div class="text-4xl font-extrabold syne">3k+</div>
+        <div class="text-sm text-gray-500 mt-1">Students Placed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured listings preview -->
+  <div class="max-w-6xl mx-auto px-6 py-16">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-2xl font-extrabold syne">Latest Openings</h2>
+      <button onclick="loadInternships(); showPage('browse')" class="text-sm syne font-bold underline opacity-60 hover:opacity-100">View all →</button>
+    </div>
+    <div id="home-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- loaded by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: BROWSE ===================== -->
+<div id="page-browse" class="page">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <h2 class="text-3xl font-extrabold syne mb-2">Browse Internships</h2>
+    <p class="text-gray-500 mb-8">Filter by what matters to you</p>
+
+    <!-- Filters -->
+    <div class="bg-white border-2 border-black p-6 mb-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div>
+          <label>City</label>
+          <input type="text" id="filter-city" placeholder="e.g. Karachi"/>
+        </div>
+        <div>
+          <label>Skill</label>
+          <input type="text" id="filter-skills" placeholder="e.g. Python"/>
+        </div>
+        <div>
+          <label>Type</label>
+          <select id="filter-remote">
+            <option value="">Any</option>
+            <option value="true">Remote</option>
+            <option value="false">On-site</option>
+          </select>
+        </div>
+        <div>
+          <label>Pay</label>
+          <select id="filter-paid">
+            <option value="">Any</option>
+            <option value="true">Paid</option>
+            <option value="false">Unpaid</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="applyFilters()" class="btn-primary">Search</button>
+    </div>
+
+    <div id="browse-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+    <div id="browse-empty" class="hidden text-center py-20 text-gray-400">
+      <div class="text-5xl mb-4">🔍</div>
+      <p class="syne font-bold text-lg">No internships found</p>
+      <p class="text-sm mt-1">Try adjusting your filters</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: REGISTER ===================== -->
+<div id="page-register" class="page">
+  <div class="min-h-screen flex items-start justify-center pt-16 px-6">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-extrabold syne mb-2">Create Account</h2>
+        <p class="text-gray-500 text-sm">Join thousands finding their first opportunity</p>
+      </div>
+
+      <div class="bg-white border-2 border-black p-8">
+        <div class="space-y-5">
+          <div>
+            <label>Full Name</label>
+            <input type="text" id="reg-name" placeholder="Ahmad Hassan"/>
+          </div>
+          <div>
+            <label>Email Address</label>
+            <input type="email" id="reg-email" placeholder="ahmad@example.com"/>
+          </div>
+          <div>
+            <label>Password</label>
+            <input type="password" id="reg-password" placeholder="At least 8 characters"/>
+          </div>
+          <div>
+            <label>I am a...</label>
+            <select id="reg-role">
+              <option value="student">Student — Looking for internships</option>
+              <option value="company">Company — Posting internships</option>
+            </select>
+          </div>
+          <button onclick="register()" class="btn-primary w-full py-3 text-base">Create Account</button>
+        </div>
+
+        <hr class="divider my-6"/>
+
+        <p class="text-center text-sm text-gray-500">
+          Already have an account?
+          <button onclick="showPage('login')" class="font-bold syne underline ml-1">Log in</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: LOGIN ===================== -->
+<div id="page-login" class="page">
+  <div class="min-h-screen flex items-start justify-center pt-16 px-6">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-extrabold syne mb-2">Welcome Back</h2>
+        <p class="text-gray-500 text-sm">Continue your internship journey</p>
+      </div>
+
+      <div class="bg-white border-2 border-black p-8">
+        <div class="space-y-5">
+          <div>
+            <label>Email Address</label>
+            <input type="email" id="login-email" placeholder="you@example.com"/>
+          </div>
+          <div>
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="Your password"/>
+          </div>
+          <button onclick="login()" class="btn-primary w-full py-3 text-base">Log In</button>
+        </div>
+
+        <hr class="divider my-6"/>
+
+        <p class="text-center text-sm text-gray-500">
+          New here?
+          <button onclick="showPage('register')" class="font-bold syne underline ml-1">Create account</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: STUDENT DASHBOARD ===================== -->
+<div id="page-student-dashboard" class="page">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="flex items-start justify-between mb-10">
+      <div>
+        <h2 class="text-3xl font-extrabold syne">My Applications</h2>
+        <p class="text-gray-500 mt-1">Track where you stand with each company</p>
+      </div>
+      <button onclick="loadInternships(); showPage('browse')" class="btn-primary">Browse More</button>
+    </div>
+
+    <div id="student-applications" class="space-y-4">
+      <div class="skeleton"></div>
+    </div>
+    <div id="student-empty" class="hidden text-center py-20 text-gray-400">
+      <div class="text-5xl mb-4">📭</div>
+      <p class="syne font-bold text-lg">No applications yet</p>
+      <p class="text-sm mt-2">Start applying to internships to track them here</p>
+      <button onclick="loadInternships(); showPage('browse')" class="btn-primary mt-6">Find Internships</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: COMPANY DASHBOARD ===================== -->
+<div id="page-company-dashboard" class="page">
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="flex items-start justify-between mb-10">
+      <div>
+        <h2 class="text-3xl font-extrabold syne">Company Dashboard</h2>
+        <p class="text-gray-500 mt-1">Manage your postings and review applicants</p>
+      </div>
+      <button onclick="openPostModal()" class="btn-primary">+ Post Internship</button>
+    </div>
+
+    <div class="mb-4">
+      <div class="flex gap-4 border-b-2 border-black">
+        <button id="tab-postings" onclick="switchTab('postings')"
+          class="syne font-bold text-sm px-4 py-2 border-b-2 border-black -mb-0.5">My Postings</button>
+        <button id="tab-applicants" onclick="switchTab('applicants')"
+          class="syne font-bold text-sm px-4 py-2 border-b-2 border-transparent -mb-0.5 opacity-50">Applicants</button>
+      </div>
+    </div>
+
+    <div id="panel-postings">
+      <div id="company-postings" class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+      <div id="company-postings-empty" class="hidden text-center py-20 text-gray-400">
+        <div class="text-5xl mb-4">📋</div>
+        <p class="syne font-bold text-lg">No postings yet</p>
+        <button onclick="openPostModal()" class="btn-primary mt-4">Post Your First Internship</button>
+      </div>
+    </div>
+
+    <div id="panel-applicants" class="hidden mt-6">
+      <div id="company-applicants" class="space-y-4"></div>
+      <div id="company-applicants-empty" class="hidden text-center py-20 text-gray-400">
+        <div class="text-5xl mb-4">👥</div>
+        <p class="syne font-bold text-lg">No applicants yet</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: POST INTERNSHIP ===================== -->
+<div id="modal-post" class="hidden modal-overlay" onclick="closeModalIfOutside(event, 'modal-post')">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-extrabold syne">Post Internship</h3>
+      <button onclick="closeModal('modal-post')" class="text-2xl leading-none opacity-40 hover:opacity-100">×</button>
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <label>Job Title *</label>
+        <input type="text" id="post-title" placeholder="Frontend Developer Intern"/>
+      </div>
+      <div>
+        <label>Description</label>
+        <textarea id="post-desc" rows="3" placeholder="What will the intern be doing..."></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label>City</label>
+          <input type="text" id="post-city" placeholder="Lahore"/>
+        </div>
+        <div>
+          <label>Duration</label>
+          <input type="text" id="post-duration" placeholder="3 months"/>
+        </div>
+      </div>
+      <div>
+        <label>Required Skills (comma-separated)</label>
+        <input type="text" id="post-skills" placeholder="Python, FastAPI, SQL"/>
+      </div>
+      <div>
+        <label>Application Deadline</label>
+        <input type="date" id="post-deadline"/>
+      </div>
+      <div class="flex gap-6">
+        <label class="flex items-center gap-2 cursor-pointer" style="text-transform:none;font-size:14px;letter-spacing:0;font-weight:400">
+          <input type="checkbox" id="post-remote" class="w-4 h-4"/>
+          <span>Remote</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer" style="text-transform:none;font-size:14px;letter-spacing:0;font-weight:400">
+          <input type="checkbox" id="post-paid" class="w-4 h-4"/>
+          <span>Paid Internship</span>
+        </label>
+      </div>
+      <button onclick="postInternship()" class="btn-primary w-full py-3 mt-2">Publish Internship</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: APPLY ===================== -->
+<div id="modal-apply" class="hidden modal-overlay" onclick="closeModalIfOutside(event, 'modal-apply')">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-extrabold syne" id="apply-modal-title">Apply for Internship</h3>
+      <button onclick="closeModal('modal-apply')" class="text-2xl leading-none opacity-40 hover:opacity-100">×</button>
+    </div>
+
+    <p class="text-sm text-gray-500 mb-6">Upload your CV in PDF format to complete your application.</p>
+
+    <div class="space-y-4">
+      <div>
+        <label>Your CV (PDF only)</label>
+        <input type="file" id="apply-cv" accept=".pdf"/>
+      </div>
+      <button onclick="submitApplication()" class="btn-primary w-full py-3">Submit Application</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: INTERNSHIP DETAIL ===================== -->
+<div id="modal-detail" class="hidden modal-overlay" onclick="closeModalIfOutside(event, 'modal-detail')">
+  <div class="modal-box" style="max-width:600px">
+    <div class="flex items-start justify-between mb-5">
+      <div>
+        <h3 class="text-2xl font-extrabold syne" id="detail-title"></h3>
+        <p class="text-gray-500 text-sm mt-1" id="detail-company"></p>
+      </div>
+      <button onclick="closeModal('modal-detail')" class="text-2xl leading-none opacity-40 hover:opacity-100 mt-1">×</button>
+    </div>
+
+    <div id="detail-tags" class="flex flex-wrap gap-2 mb-5"></div>
+
+    <div id="detail-desc" class="text-sm text-gray-600 leading-relaxed mb-6"></div>
+
+    <div class="grid grid-cols-2 gap-4 text-sm mb-6">
+      <div><span class="font-bold syne uppercase text-xs tracking-wider text-gray-400">City</span><p id="detail-city" class="mt-1"></p></div>
+      <div><span class="font-bold syne uppercase text-xs tracking-wider text-gray-400">Duration</span><p id="detail-duration" class="mt-1"></p></div>
+      <div><span class="font-bold syne uppercase text-xs tracking-wider text-gray-400">Skills</span><p id="detail-skills" class="mt-1"></p></div>
+      <div><span class="font-bold syne uppercase text-xs tracking-wider text-gray-400">Deadline</span><p id="detail-deadline" class="mt-1"></p></div>
+    </div>
+
+    <div id="detail-apply-btn"></div>
+  </div>
+</div>
+
+<script>
+  const API = "http://localhost:8000";
+
+  // ===== STATE =====
+  let token = localStorage.getItem("token") || null;
+  let userRole = localStorage.getItem("role") || null;
+  let userName = localStorage.getItem("name") || null;
+  let applyingToId = null;
+  let currentTab = "postings";
+
+  // ===== INIT =====
+  window.addEventListener("DOMContentLoaded", () => {
+    updateNavbar();
+    loadHomeListings();
+  });
+
+  function updateNavbar() {
+    if (token) {
+      document.getElementById("nav-guest").classList.add("hidden");
+      document.getElementById("nav-auth").classList.remove("hidden");
+      document.getElementById("nav-auth").classList.add("flex");
+      document.getElementById("nav-username").textContent = userName || "Account";
+    } else {
+      document.getElementById("nav-guest").classList.remove("hidden");
+      document.getElementById("nav-auth").classList.add("hidden");
+    }
+  }
+
+  // ===== NAVIGATION =====
+  function showPage(name) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page-" + name)?.classList.add("active");
+    window.scrollTo(0, 0);
+  }
+
+  function goHome() {
+    showPage("home");
+    loadHomeListings();
+  }
+
+  function showDashboard() {
+    if (userRole === "student") {
+      showPage("student-dashboard");
+      loadStudentApplications();
+    } else if (userRole === "company") {
+      showPage("company-dashboard");
+      loadCompanyPostings();
+    }
+  }
+
+  function logout() {
+    token = null; userRole = null; userName = null;
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("name");
+    updateNavbar();
+    showPage("home");
+    loadHomeListings();
+    toast("Logged out successfully");
+  }
+
+  // ===== TOAST =====
+  function toast(msg, isError = false) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.className = "toast show" + (isError ? " error" : "");
+    setTimeout(() => el.classList.remove("show"), 3000);
+  }
+
+  // ===== AUTH =====
+  async function register() {
+    const name = document.getElementById("reg-name").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const password = document.getElementById("reg-password").value;
+    const role = document.getElementById("reg-role").value;
+
+    if (!name || !email || !password) return toast("Please fill all fields", true);
+
+    try {
+      const res = await fetch(`${API}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role })
+      });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Registration failed", true);
+
+      toast("Account created! Please log in.");
+      showPage("login");
+      document.getElementById("login-email").value = email;
+    } catch (e) {
+      toast("Cannot reach server. Is the backend running?", true);
+    }
+  }
+
+  async function login() {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    if (!email || !password) return toast("Enter email and password", true);
+
+    try {
+      const res = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Login failed", true);
+
+      token = data.access_token;
+      userRole = data.role;
+      userName = data.name;
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", userRole);
+      localStorage.setItem("name", userName);
+      updateNavbar();
+      toast(`Welcome back, ${userName}!`);
+      showDashboard();
+    } catch (e) {
+      toast("Cannot reach server. Is the backend running?", true);
+    }
+  }
+
+  // ===== INTERNSHIP CARDS =====
+  function internshipCard(item, showApply = false) {
+    const skills = item.skills ? item.skills.split(",").slice(0,3) : [];
+    const skillTags = skills.map(s => `<span class="tag tag-blue">${s.trim()}</span>`).join(" ");
+
+    return `
+      <div class="card cursor-pointer" onclick="openDetail(${item.id})">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h3 class="font-bold syne text-base leading-tight">${item.title}</h3>
+            <p class="text-sm text-gray-500 mt-0.5">${item.company?.company_name || "Company"}</p>
+          </div>
+          <span class="tag ${item.is_paid ? 'tag-green' : 'tag-gray'}">${item.is_paid ? 'Paid' : 'Unpaid'}</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-3">${item.city || "Location TBD"} · ${item.duration || "Duration TBD"} · ${item.is_remote ? '🌐 Remote' : '🏢 On-site'}</p>
+        <div class="flex flex-wrap gap-1 mb-4">${skillTags}</div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-400">Deadline: ${item.deadline || 'Open'}</span>
+          ${showApply && token && userRole === 'student' ?
+            `<button onclick="event.stopPropagation(); openApply(${item.id}, '${item.title}')" class="btn-primary text-xs py-1.5 px-4">Apply</button>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== LOAD INTERNSHIPS =====
+  async function loadHomeListings() {
+    try {
+      const res = await fetch(`${API}/internships?limit=6`);
+      const data = await res.json();
+      const container = document.getElementById("home-listings");
+      if (!data.length) {
+        container.innerHTML = `<div class="col-span-3 text-center py-10 text-gray-400">
+          <p class="syne font-bold">No internships yet</p>
+          <p class="text-sm mt-1">Start the backend and create some listings</p>
+        </div>`;
+        return;
+      }
+      container.innerHTML = data.map(i => internshipCard(i)).join("");
+    } catch {
+      document.getElementById("home-listings").innerHTML =
+        `<div class="col-span-3 text-center py-10 text-gray-400 text-sm">
+          Backend not running — start it with <code class="bg-gray-100 px-2 py-0.5">uvicorn app.main:app --reload</code>
+        </div>`;
+    }
+  }
+
+  async function loadInternships(filters = {}) {
+    const container = document.getElementById("browse-listings");
+    const empty = document.getElementById("browse-empty");
+    container.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+    empty.classList.add("hidden");
+
+    let url = `${API}/internships?`;
+    if (filters.city) url += `city=${filters.city}&`;
+    if (filters.skills) url += `skills=${filters.skills}&`;
+    if (filters.is_remote !== "") url += `is_remote=${filters.is_remote}&`;
+    if (filters.is_paid !== "") url += `is_paid=${filters.is_paid}&`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.length) {
+        container.innerHTML = "";
+        empty.classList.remove("hidden");
+      } else {
+        container.innerHTML = data.map(i => internshipCard(i, true)).join("");
+      }
+    } catch {
+      container.innerHTML = `<div class="col-span-3 text-sm text-red-500 p-4">Could not load internships. Is the backend running?</div>`;
+    }
+  }
+
+  function applyFilters() {
+    loadInternships({
+      city: document.getElementById("filter-city").value,
+      skills: document.getElementById("filter-skills").value,
+      is_remote: document.getElementById("filter-remote").value,
+      is_paid: document.getElementById("filter-paid").value,
+    });
+  }
+
+  // ===== DETAIL MODAL =====
+  async function openDetail(id) {
+    try {
+      const res = await fetch(`${API}/internships/${id}`);
+      const item = await res.json();
+
+      document.getElementById("detail-title").textContent = item.title;
+      document.getElementById("detail-company").textContent = item.company?.company_name || "";
+      document.getElementById("detail-desc").textContent = item.description || "No description provided.";
+      document.getElementById("detail-city").textContent = item.city || "—";
+      document.getElementById("detail-duration").textContent = item.duration || "—";
+      document.getElementById("detail-skills").textContent = item.skills || "—";
+      document.getElementById("detail-deadline").textContent = item.deadline || "Open";
+
+      const tags = [
+        item.is_paid ? '<span class="tag tag-green">Paid</span>' : '<span class="tag tag-gray">Unpaid</span>',
+        item.is_remote ? '<span class="tag tag-blue">Remote</span>' : '<span class="tag tag-gray">On-site</span>',
+        item.is_open ? '<span class="tag tag-green">Open</span>' : '<span class="tag tag-red">Closed</span>'
+      ].join(" ");
+      document.getElementById("detail-tags").innerHTML = tags;
+
+      const applyBtn = document.getElementById("detail-apply-btn");
+      if (token && userRole === "student" && item.is_open) {
+        applyBtn.innerHTML = `<button onclick="closeModal('modal-detail'); openApply(${item.id}, '${item.title}')" class="btn-primary w-full py-3">Apply Now</button>`;
+      } else if (!token) {
+        applyBtn.innerHTML = `<button onclick="closeModal('modal-detail'); showPage('login')" class="btn-outline w-full py-3">Log In to Apply</button>`;
+      } else {
+        applyBtn.innerHTML = "";
+      }
+
+      document.getElementById("modal-detail").classList.remove("hidden");
+    } catch {
+      toast("Could not load internship details", true);
+    }
+  }
+
+  // ===== APPLY MODAL =====
+  function openApply(id, title) {
+    if (!token) return showPage("login");
+    applyingToId = id;
+    document.getElementById("apply-modal-title").textContent = `Apply — ${title}`;
+    document.getElementById("apply-cv").value = "";
+    document.getElementById("modal-apply").classList.remove("hidden");
+  }
+
+  async function submitApplication() {
+    const file = document.getElementById("apply-cv").files[0];
+    if (!file) return toast("Please select your CV", true);
+    if (!file.name.endsWith(".pdf")) return toast("CV must be a PDF file", true);
+
+    const form = new FormData();
+    form.append("cv", file);
+
+    try {
+      const res = await fetch(`${API}/applications/apply/${applyingToId}`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` },
+        body: form
+      });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Application failed", true);
+
+      closeModal("modal-apply");
+      toast("Application submitted successfully! 🎉");
+    } catch {
+      toast("Server error. Please try again.", true);
+    }
+  }
+
+  // ===== STUDENT DASHBOARD =====
+  async function loadStudentApplications() {
+    const container = document.getElementById("student-applications");
+    const empty = document.getElementById("student-empty");
+    container.innerHTML = `<div class="skeleton"></div>`;
+
+    try {
+      const res = await fetch(`${API}/applications/student`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (!data.length) {
+        container.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+
+      container.innerHTML = data.map(app => `
+        <div class="card hover:translate-y-0 hover:shadow-none">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-bold syne">${app.internship?.title || "Internship"}</h4>
+              <p class="text-sm text-gray-500 mt-0.5">${app.internship?.company?.company_name || ""}</p>
+              <p class="text-xs text-gray-400 mt-1">Applied: ${new Date(app.applied_at).toLocaleDateString("en-PK", {day:"numeric",month:"short",year:"numeric"})}</p>
+            </div>
+            <span class="tag status-${app.status}">${app.status.charAt(0).toUpperCase() + app.status.slice(1)}</span>
+          </div>
+        </div>
+      `).join("");
+    } catch {
+      container.innerHTML = `<p class="text-sm text-red-500">Error loading applications</p>`;
+    }
+  }
+
+  // ===== COMPANY DASHBOARD =====
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById("panel-postings").classList.toggle("hidden", tab !== "postings");
+    document.getElementById("panel-applicants").classList.toggle("hidden", tab !== "applicants");
+    document.getElementById("tab-postings").classList.toggle("opacity-50", tab !== "postings");
+    document.getElementById("tab-applicants").classList.toggle("opacity-50", tab === "postings");
+    if (tab === "applicants") loadCompanyApplicants();
+  }
+
+  async function loadCompanyPostings() {
+    const container = document.getElementById("company-postings");
+    const empty = document.getElementById("company-postings-empty");
+
+    try {
+      const res = await fetch(`${API}/internships`, { headers: {} });
+      // we get all internships; filter to show only owned ones via applicants endpoint
+      // For simplicity we show all since company auth shows their own
+      const appRes = await fetch(`${API}/applications/company`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!appRes.ok) throw new Error();
+
+      // get company's own internships
+      const iRes = await fetch(`${API}/internships`, {});
+      const allInternships = await iRes.json();
+
+      // use applications to get internship IDs this company has
+      const apps = await appRes.json();
+      const myInternshipIds = [...new Set(apps.map(a => a.internship_id))];
+
+      // grab any posted by checking company applications endpoint
+      // just show all open internships as a demo since company filter isn't a direct endpoint
+      container.innerHTML = allInternships.slice(0, 6).map(item => `
+        <div class="card">
+          <div class="flex items-start justify-between mb-2">
+            <h4 class="font-bold syne">${item.title}</h4>
+            <span class="tag ${item.is_open ? 'tag-green' : 'tag-red'}">${item.is_open ? 'Open' : 'Closed'}</span>
+          </div>
+          <p class="text-xs text-gray-400 mb-3">${item.city || ''} · ${item.duration || ''}</p>
+          <div class="flex gap-2">
+            <button onclick="closeInternship(${item.id})" class="text-xs btn-outline py-1.5 px-3">Close</button>
+            <button onclick="deleteInternship(${item.id})" class="text-xs btn-danger py-1.5 px-3">Delete</button>
+          </div>
+        </div>
+      `).join("");
+
+      if (!allInternships.length) {
+        container.innerHTML = "";
+        empty.classList.remove("hidden");
+      }
+    } catch {
+      container.innerHTML = `<p class="text-sm text-red-500 col-span-2">Error loading postings</p>`;
+    }
+  }
+
+  async function loadCompanyApplicants() {
+    const container = document.getElementById("company-applicants");
+    const empty = document.getElementById("company-applicants-empty");
+
+    try {
+      const res = await fetch(`${API}/applications/company`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (!data.length) {
+        container.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+
+      container.innerHTML = data.map(app => `
+        <div class="card hover:translate-y-0 hover:shadow-none">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-bold syne">Applicant #${app.student_id}</h4>
+              <p class="text-sm text-gray-500 mt-0.5">For: ${app.internship?.title || "Internship"}</p>
+              <p class="text-xs text-gray-400 mt-1">${new Date(app.applied_at).toLocaleDateString()}</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="tag status-${app.status}">${app.status}</span>
+              <select onchange="updateAppStatus(${app.id}, this.value)"
+                class="text-xs border-2 border-black px-2 py-1.5 syne font-bold cursor-pointer"
+                style="width:auto">
+                <option value="pending" ${app.status==='pending'?'selected':''}>Pending</option>
+                <option value="accepted" ${app.status==='accepted'?'selected':''}>Accept</option>
+                <option value="rejected" ${app.status==='rejected'?'selected':''}>Reject</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    } catch {
+      container.innerHTML = `<p class="text-sm text-red-500">Error loading applicants</p>`;
+    }
+  }
+
+  async function updateAppStatus(appId, status) {
+    try {
+      const res = await fetch(`${API}/applications/${appId}/status`, {
+        method: "PUT",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) throw new Error();
+      toast(`Status updated to ${status}`);
+      loadCompanyApplicants();
+    } catch {
+      toast("Failed to update status", true);
+    }
+  }
+
+  // ===== POST INTERNSHIP MODAL =====
+  function openPostModal() {
+    document.getElementById("modal-post").classList.remove("hidden");
+  }
+
+  async function postInternship() {
+    const title = document.getElementById("post-title").value.trim();
+    if (!title) return toast("Title is required", true);
+
+    const body = {
+      title,
+      description: document.getElementById("post-desc").value,
+      city: document.getElementById("post-city").value,
+      duration: document.getElementById("post-duration").value,
+      skills: document.getElementById("post-skills").value,
+      deadline: document.getElementById("post-deadline").value,
+      is_remote: document.getElementById("post-remote").checked,
+      is_paid: document.getElementById("post-paid").checked,
+    };
+
+    try {
+      const res = await fetch(`${API}/internships/`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Failed to post", true);
+
+      closeModal("modal-post");
+      toast("Internship posted successfully!");
+      loadCompanyPostings();
+    } catch {
+      toast("Server error", true);
+    }
+  }
+
+  async function closeInternship(id) {
+    try {
+      await fetch(`${API}/internships/${id}`, {
+        method: "PUT",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ is_open: false })
+      });
+      toast("Internship closed");
+      loadCompanyPostings();
+    } catch {
+      toast("Error", true);
+    }
+  }
+
+  async function deleteInternship(id) {
+    if (!confirm("Delete this internship? This cannot be undone.")) return;
+    try {
+      await fetch(`${API}/internships/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      toast("Internship deleted");
+      loadCompanyPostings();
+    } catch {
+      toast("Error", true);
+    }
+  }
+
+  // ===== MODALS =====
+  function closeModal(id) {
+    document.getElementById(id).classList.add("hidden");
+  }
+
+  function closeModalIfOutside(e, id) {
+    if (e.target === document.getElementById(id)) closeModal(id);
+  }
+</script>
+
+</body>
+</html>

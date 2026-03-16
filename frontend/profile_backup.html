@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InternHub — Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --ink: #0d0d0d; --paper: #f5f0e8; --accent: #e84c2b; --accent2: #2b5fe8; --muted: #8a8278; }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background-color: var(--paper); color: var(--ink); min-height: 100vh; }
+    .syne { font-family: 'Syne', sans-serif; }
+    h1,h2,h3 { font-family: 'Syne', sans-serif; }
+    .btn-primary { background: var(--ink); color: var(--paper); font-family: 'Syne', sans-serif; font-weight: 600; padding: 10px 24px; border: 2px solid var(--ink); cursor: pointer; transition: all 0.2s; display: inline-block; }
+    .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+    .btn-outline { background: transparent; color: var(--ink); font-family: 'Syne', sans-serif; font-weight: 600; padding: 8px 20px; border: 2px solid var(--ink); cursor: pointer; transition: all 0.2s; }
+    .btn-outline:hover { background: var(--ink); color: var(--paper); }
+    .btn-danger { background: var(--accent); color: white; font-family: 'Syne', sans-serif; font-weight: 600; padding: 6px 14px; border: 2px solid var(--accent); cursor: pointer; font-size: 12px; }
+    .tag { display: inline-block; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 10px; border: 1.5px solid currentColor; }
+    .tag-blue { color: var(--accent2); border-color: var(--accent2); background: #edf0ff; }
+    .tag-green { color: #1a7a4a; border-color: #1a7a4a; background: #edfaf3; }
+    .tag-gray { color: var(--muted); border-color: #ccc; background: #f8f8f6; }
+    input, select, textarea { width: 100%; border: 1.5px solid #ccc; padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; background: white; outline: none; transition: border-color 0.2s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--ink); }
+    label { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; margin-bottom: 4px; }
+    nav { border-bottom: 2px solid var(--ink); }
+    .section-card { background: white; border: 1.5px solid #e0d9ce; padding: 28px; margin-bottom: 16px; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .modal-box { background: var(--paper); border: 2px solid var(--ink); padding: 32px; max-width: 520px; width: 92%; max-height: 90vh; overflow-y: auto; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: var(--paper); font-family: 'Syne', sans-serif; font-weight: 600; padding: 14px 22px; z-index: 999; opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { background: var(--accent); }
+    .cover-area { height: 200px; background: linear-gradient(135deg, #0d0d0d 0%, #2b5fe8 100%); position: relative; overflow: hidden; cursor: pointer; }
+    .cover-area img { width: 100%; height: 100%; object-fit: cover; }
+    .cover-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+    .cover-area:hover .cover-overlay { opacity: 1; }
+    .avatar-wrap { position: relative; display: inline-block; cursor: pointer; }
+    .avatar-wrap:hover .avatar-overlay { opacity: 1; }
+    .avatar-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 9999px; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+    .divider { border: none; border-top: 1.5px solid #e8e3d8; margin: 20px 0; }
+    .exp-item { padding: 16px 0; border-bottom: 1px solid #e8e3d8; }
+    .exp-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .skeleton { background: linear-gradient(90deg, #e8e3d8 25%, #f0ece3 50%, #e8e3d8 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    .view-only .edit-btn { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="bg-white sticky top-0 z-50">
+  <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 hover:opacity-70 transition-opacity">
+      <div class="w-7 h-7 bg-black flex items-center justify-center"><span class="text-white text-xs font-black syne">IH</span></div>
+      <span class="text-xl font-extrabold syne tracking-tight">InternHub</span>
+    </a>
+    <div class="flex items-center gap-3">
+      <span id="nav-name" class="text-sm syne font-bold opacity-60"></span>
+      <a href="/" class="btn-outline text-sm py-2 px-4">← Back</a>
+    </div>
+  </div>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<!-- LOADING STATE -->
+<div id="page-loading" class="max-w-4xl mx-auto px-6 py-10">
+  <div class="skeleton" style="height:200px;margin-bottom:0"></div>
+  <div class="bg-white border-x-2 border-b-2 border-black p-6">
+    <div class="skeleton" style="height:24px;width:200px;margin-bottom:12px"></div>
+    <div class="skeleton" style="height:16px;width:300px"></div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div id="page-profile" class="hidden max-w-4xl mx-auto px-6 py-6 pb-16">
+
+  <!-- COVER + AVATAR -->
+  <div class="border-2 border-black overflow-hidden mb-4" style="background:white">
+    <!-- Cover photo -->
+    <div class="cover-area" id="cover-area" onclick="isOwner && triggerCoverUpload()">
+      <img id="cover-img" src="" alt="" style="display:none"/>
+      <div id="cover-placeholder" class="w-full h-full flex items-center justify-center" style="background:linear-gradient(135deg,#0d0d0d,#2b5fe8)">
+        <span class="text-white opacity-30 syne font-bold text-lg">COVER PHOTO</span>
+      </div>
+      <div class="cover-overlay">
+        <span class="text-white syne font-bold text-sm">📷 Change Cover</span>
+      </div>
+    </div>
+
+    <!-- Avatar + actions row -->
+    <div class="px-6 pb-6">
+      <div class="flex items-end justify-between" style="margin-top:-40px">
+        <!-- Avatar -->
+        <div class="avatar-wrap" onclick="isOwner && triggerPhotoUpload()">
+          <div id="avatar-circle" class="w-24 h-24 border-4 border-white flex items-center justify-center text-white text-3xl font-black syne" style="background:var(--accent);border-radius:9999px">
+            <span id="avatar-letter">?</span>
+          </div>
+          <img id="avatar-img" src="" alt="" class="w-24 h-24 border-4 border-white object-cover hidden" style="border-radius:9999px"/>
+          <div class="avatar-overlay edit-btn"><span class="text-white text-xs syne font-bold">📷</span></div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex gap-2 mt-2" id="profile-actions">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Name + headline -->
+      <div class="mt-4">
+        <h1 class="text-2xl font-extrabold syne" id="profile-name">—</h1>
+        <p class="text-gray-500 mt-1" id="profile-headline">—</p>
+        <p class="text-sm text-gray-400 mt-1" id="profile-location"></p>
+
+        <!-- Social links -->
+        <div class="flex gap-3 mt-3 flex-wrap" id="social-links"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section-card" id="about-section">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-extrabold syne">About</h2>
+      <button class="btn-outline text-xs py-1.5 px-3 edit-btn" onclick="openEditAbout()">Edit</button>
+    </div>
+    <p id="about-text" class="text-sm text-gray-600 leading-relaxed">No bio added yet.</p>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section-card" id="skills-section">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-extrabold syne">Skills</h2>
+      <button class="btn-outline text-xs py-1.5 px-3 edit-btn" onclick="openEditSkills()">Edit</button>
+    </div>
+    <div id="skills-tags" class="flex flex-wrap gap-2">
+      <span class="text-sm text-gray-400">No skills added yet.</span>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="section-card" id="exp-section">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-extrabold syne">Experience</h2>
+      <button class="btn-primary text-xs py-1.5 px-3 edit-btn" onclick="openAddExp()">+ Add</button>
+    </div>
+    <div id="exp-list"><span class="text-sm text-gray-400">No experience added yet.</span></div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section-card" id="edu-section">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-extrabold syne">Education</h2>
+      <button class="btn-primary text-xs py-1.5 px-3 edit-btn" onclick="openAddEdu()">+ Add</button>
+    </div>
+    <div id="edu-list"><span class="text-sm text-gray-400">No education added yet.</span></div>
+  </div>
+
+  <!-- RESUME -->
+  <div class="section-card" id="resume-section">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-extrabold syne">Resume / CV</h2>
+      <label class="btn-primary text-xs py-1.5 px-3 edit-btn cursor-pointer" style="text-decoration:none">
+        Upload PDF <input type="file" accept=".pdf" class="hidden" onchange="uploadCV(this)"/>
+      </label>
+    </div>
+    <div id="cv-section">
+      <span class="text-sm text-gray-400">No CV uploaded yet.</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: Edit About + Headline + Location + Social -->
+<div id="modal-about" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-about')">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-extrabold syne">Edit Profile Info</h3>
+      <button onclick="closeModal('modal-about')" class="text-2xl opacity-40 hover:opacity-100">×</button>
+    </div>
+    <div class="space-y-4">
+      <div><label>Headline</label><input type="text" id="edit-headline" placeholder="e.g. Final Year CS Student at FAST"/></div>
+      <div><label>Location</label><input type="text" id="edit-location" placeholder="e.g. Lahore, Pakistan"/></div>
+      <div><label>About / Bio</label><textarea id="edit-bio" rows="4" placeholder="Tell people about yourself..."></textarea></div>
+      <div><label>LinkedIn URL</label><input type="text" id="edit-linkedin" placeholder="https://linkedin.com/in/yourname"/></div>
+      <div><label>GitHub URL</label><input type="text" id="edit-github" placeholder="https://github.com/yourname"/></div>
+      <div><label>Website / Portfolio</label><input type="text" id="edit-website" placeholder="https://yourwebsite.com"/></div>
+      <button onclick="saveAbout()" class="btn-primary w-full py-3">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Edit Skills -->
+<div id="modal-skills" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-skills')">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-extrabold syne">Edit Skills</h3>
+      <button onclick="closeModal('modal-skills')" class="text-2xl opacity-40 hover:opacity-100">×</button>
+    </div>
+    <div class="space-y-4">
+      <div><label>Skills (comma separated)</label><input type="text" id="edit-skills" placeholder="Python, FastAPI, React, SQL"/></div>
+      <p class="text-xs text-gray-400">Separate each skill with a comma</p>
+      <button onclick="saveSkills()" class="btn-primary w-full py-3">Save Skills</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Experience -->
+<div id="modal-exp" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-exp')">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-extrabold syne">Add Experience</h3>
+      <button onclick="closeModal('modal-exp')" class="text-2xl opacity-40 hover:opacity-100">×</button>
+    </div>
+    <div class="space-y-4">
+      <div><label>Job Title *</label><input type="text" id="exp-title" placeholder="Software Developer Intern"/></div>
+      <div><label>Company *</label><input type="text" id="exp-company" placeholder="Google, Meta, Startup..."/></div>
+      <div><label>Location</label><input type="text" id="exp-location" placeholder="Remote / Lahore, PK"/></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label>Start Date</label><input type="text" id="exp-start" placeholder="Jun 2024"/></div>
+        <div><label>End Date</label><input type="text" id="exp-end" placeholder="Aug 2024 or Present"/></div>
+      </div>
+      <div><label>Description</label><textarea id="exp-desc" rows="3" placeholder="What did you work on?"></textarea></div>
+      <button onclick="saveExp()" class="btn-primary w-full py-3">Add Experience</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add Education -->
+<div id="modal-edu" class="hidden modal-overlay" onclick="closeIfOutside(event,'modal-edu')">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-extrabold syne">Add Education</h3>
+      <button onclick="closeModal('modal-edu')" class="text-2xl opacity-40 hover:opacity-100">×</button>
+    </div>
+    <div class="space-y-4">
+      <div><label>School / University *</label><input type="text" id="edu-school" placeholder="FAST, LUMS, NUST..."/></div>
+      <div><label>Degree</label><input type="text" id="edu-degree" placeholder="BS, MS, BE..."/></div>
+      <div><label>Field of Study</label><input type="text" id="edu-field" placeholder="Computer Science"/></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label>Start Year</label><input type="text" id="edu-start" placeholder="2021"/></div>
+        <div><label>End Year</label><input type="text" id="edu-end" placeholder="2025 or Present"/></div>
+      </div>
+      <div><label>Description</label><textarea id="edu-desc" rows="2" placeholder="Activities, achievements..."></textarea></div>
+      <button onclick="saveEdu()" class="btn-primary w-full py-3">Add Education</button>
+    </div>
+  </div>
+</div>
+
+<!-- hidden file inputs -->
+<input type="file" id="photo-input" accept=".jpg,.jpeg,.png,.webp" class="hidden" onchange="uploadPhoto(this)"/>
+<input type="file" id="cover-input" accept=".jpg,.jpeg,.png,.webp" class="hidden" onchange="uploadCoverPhoto(this)"/>
+
+<script>
+  const API     = "http://localhost:8000";
+  const token   = localStorage.getItem("token");
+  const myId    = parseInt(localStorage.getItem("user_id") || "0");
+  let   isOwner = false;
+  let   profile = null;
+
+  // get user_id from URL param or default to own profile
+  const urlParams  = new URLSearchParams(window.location.search);
+  const viewUserId = parseInt(urlParams.get("user_id") || "0");
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const name = localStorage.getItem("name");
+    if (name) document.getElementById("nav-name").textContent = name;
+    loadProfile();
+  });
+
+  async function loadProfile() {
+    try {
+      let data;
+      if (!viewUserId && token) {
+        // viewing own profile
+        const res = await fetch(`${API}/profiles/me`, { headers: { "Authorization": `Bearer ${token}` } });
+        if (!res.ok) throw new Error();
+        data     = await res.json();
+        isOwner  = true;
+        // also get user_id stored at login
+        const uid = localStorage.getItem("user_id");
+        if (uid) data.user_id = parseInt(uid);
+        data.user_name = localStorage.getItem("name");
+        data.user_role = localStorage.getItem("role");
+      } else {
+        // viewing someone else's profile
+        const uid = viewUserId || myId;
+        const res = await fetch(`${API}/profiles/${uid}`);
+        if (!res.ok) throw new Error("Profile not found");
+        data    = await res.json();
+        isOwner = token && (data.user_id === myId);
+      }
+      profile = data;
+      renderProfile(data);
+    } catch (e) {
+      document.getElementById("page-loading").innerHTML = `
+        <div class="text-center py-20 text-gray-400">
+          <div class="text-5xl mb-4">👤</div>
+          <p class="syne font-bold text-lg">Profile not found</p>
+          <p class="text-sm mt-1">This user hasn't set up their profile yet.</p>
+          <a href="/" class="btn-primary mt-6 inline-block">Go Home</a>
+        </div>`;
+    }
+  }
+
+  function renderProfile(data) {
+    document.getElementById("page-loading").classList.add("hidden");
+    document.getElementById("page-profile").classList.remove("hidden");
+
+    const name = data.user_name || "User";
+    document.title = `${name} — InternHub`;
+
+    // avatar
+    document.getElementById("avatar-letter").textContent = name.charAt(0).toUpperCase();
+    if (data.photo_path) {
+      document.getElementById("avatar-circle").classList.add("hidden");
+      const img = document.getElementById("avatar-img");
+      img.src = `${API}/${data.photo_path}`;
+      img.classList.remove("hidden");
+    }
+
+    // cover
+    if (data.cover_path) {
+      document.getElementById("cover-placeholder").style.display = "none";
+      const img = document.getElementById("cover-img");
+      img.src = `${API}/${data.cover_path}`;
+      img.style.display = "block";
+    }
+
+    // text
+    document.getElementById("profile-name").textContent     = name;
+    document.getElementById("profile-headline").textContent = data.headline || (isOwner ? "Add a headline" : "");
+    document.getElementById("profile-location").textContent = data.location || "";
+    document.getElementById("about-text").textContent       = data.bio || (isOwner ? "Tell people about yourself." : "No bio added.");
+
+    // social links
+    const socials = [];
+    if (data.linkedin_url) socials.push(`<a href="${data.linkedin_url}" target="_blank" class="tag tag-blue" style="text-decoration:none">LinkedIn ↗</a>`);
+    if (data.github_url)   socials.push(`<a href="${data.github_url}"   target="_blank" class="tag tag-gray" style="text-decoration:none">GitHub ↗</a>`);
+    if (data.website_url)  socials.push(`<a href="${data.website_url}"  target="_blank" class="tag tag-green" style="text-decoration:none">Website ↗</a>`);
+    document.getElementById("social-links").innerHTML = socials.join("") || (isOwner ? '<span class="text-xs text-gray-400">Add social links</span>' : "");
+
+    // skills
+    if (data.skills) {
+      const tags = data.skills.split(",").map(s => `<span class="tag tag-blue">${s.trim()}</span>`).join(" ");
+      document.getElementById("skills-tags").innerHTML = tags;
+    }
+
+    // experience
+    renderExpList(data.experience || []);
+
+    // education
+    renderEduList(data.education || []);
+
+    // cv
+    if (data.cv_path) {
+      document.getElementById("cv-section").innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-50 border-2 border-red-200 flex items-center justify-center text-red-600 font-black syne text-xs">PDF</div>
+            <div>
+              <p class="font-bold syne text-sm">Resume.pdf</p>
+              <p class="text-xs text-gray-400">Uploaded</p>
+            </div>
+          </div>
+          <a href="${API}/${data.cv_path}" target="_blank" class="btn-outline text-xs py-1.5 px-3" style="text-decoration:none">Download</a>
+        </div>`;
+    }
+
+    // action buttons
+    const actions = document.getElementById("profile-actions");
+    if (isOwner) {
+      actions.innerHTML = `<button onclick="openEditAbout()" class="btn-primary text-sm py-2 px-5">Edit Profile</button>`;
+    } else if (token) {
+      actions.innerHTML = `<button class="btn-outline text-sm py-2 px-5">Connect</button>`;
+    } else {
+      actions.innerHTML = `<a href="/" class="btn-primary text-sm py-2 px-5" style="text-decoration:none">Log In to Connect</a>`;
+    }
+
+    // hide edit buttons if viewing someone else
+    if (!isOwner) {
+      document.querySelectorAll(".edit-btn").forEach(el => el.style.display = "none");
+    }
+  }
+
+  function renderExpList(list) {
+    if (!list.length) {
+      document.getElementById("exp-list").innerHTML = `<span class="text-sm text-gray-400">No experience added yet.</span>`;
+      return;
+    }
+    document.getElementById("exp-list").innerHTML = list.map(e => `
+      <div class="exp-item">
+        <div class="flex items-start justify-between">
+          <div class="flex gap-3">
+            <div class="w-10 h-10 bg-gray-100 border border-gray-200 flex items-center justify-center text-lg flex-shrink-0">💼</div>
+            <div>
+              <h4 class="font-bold syne text-sm">${e.title}</h4>
+              <p class="text-sm text-gray-600">${e.company}${e.location ? ' · ' + e.location : ''}</p>
+              <p class="text-xs text-gray-400 mt-0.5">${e.start_date || ''}${e.end_date ? ' — ' + e.end_date : ''}</p>
+              ${e.description ? `<p class="text-sm text-gray-500 mt-2">${e.description}</p>` : ''}
+            </div>
+          </div>
+          ${isOwner ? `<button onclick="deleteExp(${e.id})" class="btn-danger ml-2">✕</button>` : ''}
+        </div>
+      </div>`).join("");
+  }
+
+  function renderEduList(list) {
+    if (!list.length) {
+      document.getElementById("edu-list").innerHTML = `<span class="text-sm text-gray-400">No education added yet.</span>`;
+      return;
+    }
+    document.getElementById("edu-list").innerHTML = list.map(e => `
+      <div class="exp-item">
+        <div class="flex items-start justify-between">
+          <div class="flex gap-3">
+            <div class="w-10 h-10 bg-gray-100 border border-gray-200 flex items-center justify-center text-lg flex-shrink-0">🎓</div>
+            <div>
+              <h4 class="font-bold syne text-sm">${e.school}</h4>
+              <p class="text-sm text-gray-600">${e.degree || ''}${e.field ? ' · ' + e.field : ''}</p>
+              <p class="text-xs text-gray-400 mt-0.5">${e.start_year || ''}${e.end_year ? ' — ' + e.end_year : ''}</p>
+              ${e.description ? `<p class="text-sm text-gray-500 mt-2">${e.description}</p>` : ''}
+            </div>
+          </div>
+          ${isOwner ? `<button onclick="deleteEdu(${e.id})" class="btn-danger ml-2">✕</button>` : ''}
+        </div>
+      </div>`).join("");
+  }
+
+  // ===== EDIT MODALS =====
+  function openEditAbout() {
+    document.getElementById("edit-headline").value = profile.headline || "";
+    document.getElementById("edit-location").value = profile.location || "";
+    document.getElementById("edit-bio").value       = profile.bio      || "";
+    document.getElementById("edit-linkedin").value  = profile.linkedin_url || "";
+    document.getElementById("edit-github").value    = profile.github_url   || "";
+    document.getElementById("edit-website").value   = profile.website_url  || "";
+    document.getElementById("modal-about").classList.remove("hidden");
+  }
+
+  async function saveAbout() {
+    const body = {
+      headline:     document.getElementById("edit-headline").value,
+      location:     document.getElementById("edit-location").value,
+      bio:          document.getElementById("edit-bio").value,
+      linkedin_url: document.getElementById("edit-linkedin").value,
+      github_url:   document.getElementById("edit-github").value,
+      website_url:  document.getElementById("edit-website").value,
+    };
+    await updateProfile(body);
+    closeModal("modal-about");
+  }
+
+  function openEditSkills() {
+    document.getElementById("edit-skills").value = profile.skills || "";
+    document.getElementById("modal-skills").classList.remove("hidden");
+  }
+
+  async function saveSkills() {
+    await updateProfile({ skills: document.getElementById("edit-skills").value });
+    closeModal("modal-skills");
+  }
+
+  async function updateProfile(body) {
+    try {
+      const res = await fetch(`${API}/profiles/me`, {
+        method: "PUT",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error();
+      profile = await res.json();
+      profile.user_name = localStorage.getItem("name");
+      profile.user_role = localStorage.getItem("role");
+      renderProfile(profile);
+      toast("Profile updated!");
+    } catch { toast("Failed to update", true); }
+  }
+
+  // ===== EXPERIENCE =====
+  function openAddExp() { document.getElementById("modal-exp").classList.remove("hidden"); }
+
+  async function saveExp() {
+    const title   = document.getElementById("exp-title").value.trim();
+    const company = document.getElementById("exp-company").value.trim();
+    if (!title || !company) return toast("Title and company are required", true);
+    try {
+      const res = await fetch(`${API}/profiles/me/experience`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title, company,
+          location:    document.getElementById("exp-location").value,
+          start_date:  document.getElementById("exp-start").value,
+          end_date:    document.getElementById("exp-end").value,
+          description: document.getElementById("exp-desc").value,
+        })
+      });
+      if (!res.ok) throw new Error();
+      ["exp-title","exp-company","exp-location","exp-start","exp-end","exp-desc"].forEach(id => document.getElementById(id).value = "");
+      closeModal("modal-exp");
+      toast("Experience added!");
+      await refreshProfile();
+    } catch { toast("Failed to add experience", true); }
+  }
+
+  async function deleteExp(id) {
+    if (!confirm("Remove this experience?")) return;
+    try {
+      await fetch(`${API}/profiles/me/experience/${id}`, { method: "DELETE", headers: { "Authorization": `Bearer ${token}` } });
+      toast("Removed"); await refreshProfile();
+    } catch { toast("Error", true); }
+  }
+
+  // ===== EDUCATION =====
+  function openAddEdu() { document.getElementById("modal-edu").classList.remove("hidden"); }
+
+  async function saveEdu() {
+    const school = document.getElementById("edu-school").value.trim();
+    if (!school) return toast("School name is required", true);
+    try {
+      const res = await fetch(`${API}/profiles/me/education`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          school,
+          degree:      document.getElementById("edu-degree").value,
+          field:       document.getElementById("edu-field").value,
+          start_year:  document.getElementById("edu-start").value,
+          end_year:    document.getElementById("edu-end").value,
+          description: document.getElementById("edu-desc").value,
+        })
+      });
+      if (!res.ok) throw new Error();
+      ["edu-school","edu-degree","edu-field","edu-start","edu-end","edu-desc"].forEach(id => document.getElementById(id).value = "");
+      closeModal("modal-edu");
+      toast("Education added!");
+      await refreshProfile();
+    } catch { toast("Failed to add education", true); }
+  }
+
+  async function deleteEdu(id) {
+    if (!confirm("Remove this education?")) return;
+    try {
+      await fetch(`${API}/profiles/me/education/${id}`, { method: "DELETE", headers: { "Authorization": `Bearer ${token}` } });
+      toast("Removed"); await refreshProfile();
+    } catch { toast("Error", true); }
+  }
+
+  // ===== FILE UPLOADS =====
+  function triggerPhotoUpload()  { document.getElementById("photo-input").click(); }
+  function triggerCoverUpload()  { document.getElementById("cover-input").click(); }
+
+  async function uploadPhoto(input) {
+    const file = input.files[0]; if (!file) return;
+    const form = new FormData(); form.append("photo", file);
+    try {
+      const res = await fetch(`${API}/profiles/me/photo`, { method:"POST", headers:{"Authorization":`Bearer ${token}`}, body:form });
+      if (!res.ok) throw new Error();
+      toast("Photo updated!"); await refreshProfile();
+    } catch { toast("Upload failed", true); }
+  }
+
+  async function uploadCoverPhoto(input) {
+    const file = input.files[0]; if (!file) return;
+    const form = new FormData(); form.append("cover", file);
+    try {
+      const res = await fetch(`${API}/profiles/me/cover`, { method:"POST", headers:{"Authorization":`Bearer ${token}`}, body:form });
+      if (!res.ok) throw new Error();
+      toast("Cover updated!"); await refreshProfile();
+    } catch { toast("Upload failed", true); }
+  }
+
+  async function uploadCV(input) {
+    const file = input.files[0]; if (!file) return;
+    const form = new FormData(); form.append("cv", file);
+    try {
+      const res = await fetch(`${API}/profiles/me/cv`, { method:"POST", headers:{"Authorization":`Bearer ${token}`}, body:form });
+      if (!res.ok) throw new Error();
+      toast("CV uploaded!"); await refreshProfile();
+    } catch { toast("Upload failed", true); }
+  }
+
+  async function refreshProfile() {
+    const res = await fetch(`${API}/profiles/me`, { headers: { "Authorization": `Bearer ${token}` } });
+    profile = await res.json();
+    profile.user_name = localStorage.getItem("name");
+    profile.user_role = localStorage.getItem("role");
+    renderProfile(profile);
+  }
+
+  // ===== MODALS =====
+  function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
+  function closeIfOutside(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+  function toast(msg, isError = false) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.className = "toast show" + (isError ? " error" : "");
+    setTimeout(() => el.classList.remove("show"), 3000);
+  }
+</script>
+</body>
+</html>

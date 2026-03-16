@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InternHub — Find Your First Big Break</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:      #080c14;
+      --surface: #0e1420;
+      --card:    #111827;
+      --border:  rgba(255,255,255,0.08);
+      --gold:    #c9a84c;
+      --gold2:   #e8c97a;
+      --blue:    #3b82f6;
+      --green:   #10b981;
+      --red:     #ef4444;
+      --text:    #f1f5f9;
+      --muted:   #64748b;
+      --subtle:  #1e293b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.4;
+    }
+
+    h1, h2, h3, .display { font-family: 'Playfair Display', serif; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(8,12,20,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* BUTTONS */
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #080c14;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      padding: 10px 24px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-transform: uppercase;
+    }
+    .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(201,168,76,0.35); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      padding: 10px 24px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
+
+    .btn-danger {
+      background: rgba(239,68,68,0.12);
+      color: var(--red);
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 6px 14px;
+      border: 1px solid rgba(239,68,68,0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+    /* CARDS */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 24px;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .card:hover { border-color: rgba(201,168,76,0.2); transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .card:hover::before { opacity: 1; }
+
+    .muse-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 24px;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+    .muse-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59,130,246,0.5), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .muse-card:hover { border-color: rgba(59,130,246,0.25); transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .muse-card:hover::before { opacity: 1; }
+
+    /* TAGS */
+    .tag {
+      display: inline-block;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 10px;
+    }
+    .tag-gold   { color: var(--gold2); background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.25); }
+    .tag-blue   { color: #93c5fd; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25); }
+    .tag-green  { color: #6ee7b7; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); }
+    .tag-red    { color: #fca5a5; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); }
+    .tag-gray   { color: var(--muted); background: rgba(100,116,139,0.1); border: 1px solid rgba(100,116,139,0.2); }
+    .tag-purple { color: #c4b5fd; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); }
+    .tag-orange { color: #fdba74; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25); }
+
+    /* INPUTS */
+    input, select, textarea {
+      width: 100%;
+      background: var(--subtle);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 16px;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+    }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    select option { background: var(--card); color: var(--text); }
+
+    label {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; animation: fadeUp 0.4s ease; }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+    .modal-box {
+      background: var(--card);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 36px;
+      max-width: 520px; width: 92%;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      animation: fadeUp 0.3s ease;
+    }
+
+    /* STATUS TAGS */
+    .status-pending  { color: #fbbf24; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); }
+    .status-accepted { color: #6ee7b7; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); }
+    .status-rejected { color: #fca5a5; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--card);
+      border: 1px solid var(--gold);
+      color: var(--text);
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 14px 22px;
+      z-index: 999;
+      opacity: 0; transform: translateY(12px);
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { border-color: var(--red); }
+
+    /* SKELETON */
+    .skeleton {
+      background: linear-gradient(90deg, var(--card) 25%, var(--subtle) 50%, var(--card) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite;
+      height: 160px;
+    }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+    /* TABS */
+    .btab-active   { color: var(--gold) !important; border-bottom: 2px solid var(--gold) !important; opacity: 1 !important; }
+    .btab-inactive { color: var(--muted); border-bottom: 2px solid transparent; opacity: 0.6; }
+    .btab-inactive:hover { color: var(--text); opacity: 0.85; }
+
+    /* HERO GLOW */
+    .hero-glow {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(100px);
+      pointer-events: none;
+    }
+
+    /* STAT DIVIDER */
+    .stat-divider { border-right: 1px solid var(--border); }
+
+    /* GOLD TEXT */
+    .text-gold { color: var(--gold); }
+    .text-gold2 { color: var(--gold2); }
+
+    /* Section header line */
+    .section-line {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
+    }
+    .section-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* Logo mark */
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      display: flex; align-items: center; justify-content: center;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+
+    /* Form section */
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 36px;
+    }
+
+    /* Divider */
+    .hdivider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+    /* Number badge */
+    .num-badge {
+      width: 28px; height: 28px;
+      border-radius: 9999px;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold);
+      font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Checkbox styling */
+    input[type="checkbox"] {
+      width: 16px; height: 16px; accent-color: var(--gold);
+    }
+
+    a { color: inherit; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <button onclick="goHome()" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+      <div class="logo-mark">
+        <span style="color:#080c14;font-weight:900;font-size:13px;font-family:'Cabinet Grotesk',sans-serif">IH</span>
+      </div>
+      <span style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-0.02em">InternHub</span>
+    </button>
+
+    <div class="hidden md:flex items-center gap-8">
+      <button onclick="loadInternships(); showPage('browse')" class="text-sm font-medium hover:text-gold transition-colors" style="color:var(--muted)">Browse Jobs</button>
+      <button onclick="switchBrowseTab('muse'); loadInternships(); showPage('browse')" class="text-sm font-medium hover:text-gold transition-colors" style="color:var(--muted)">Global Jobs</button>
+    </div>
+
+    <div id="nav-guest" class="flex items-center gap-3">
+      <button onclick="showPage('login')" class="btn-ghost text-xs py-2 px-5">Log In</button>
+      <button onclick="showPage('register')" class="btn-gold text-xs py-2 px-5">Get Started</button>
+    </div>
+
+    <div id="nav-auth" class="hidden flex items-center gap-3">
+      <span id="nav-username" class="text-sm font-medium" style="color:var(--muted)"></span>
+      <a href="/profile" class="btn-ghost text-xs py-2 px-4">Profile</a>
+      <button onclick="showDashboard()" class="btn-ghost text-xs py-2 px-4">Dashboard</button>
+      <button onclick="logout()" class="btn-gold text-xs py-2 px-4">Log Out</button>
+    </div>
+  </div>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<!-- ========== HOME ========== -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <div class="relative overflow-hidden" style="min-height:88vh;display:flex;align-items:center">
+    <!-- Glow orbs -->
+    <div class="hero-glow" style="width:600px;height:600px;background:rgba(201,168,76,0.06);top:-200px;right:-100px"></div>
+    <div class="hero-glow" style="width:400px;height:400px;background:rgba(59,130,246,0.05);bottom:-100px;left:-100px"></div>
+
+    <!-- Grid lines decoration -->
+    <div style="position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:80px 80px;opacity:0.4"></div>
+
+    <div class="max-w-7xl mx-auto px-6 py-24 relative z-10 w-full">
+      <div class="max-w-3xl">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="tag tag-gold">2025 Cohort Open</div>
+          <div class="tag tag-green">500+ Live Listings</div>
+        </div>
+
+        <h1 class="mb-6" style="font-size:clamp(48px,6vw,88px);font-weight:900;line-height:0.95;letter-spacing:-0.03em">
+          Your Career<br/>
+          <span style="color:var(--gold)">Starts</span><br/>
+          <span style="color:var(--muted)">Here.</span>
+        </h1>
+
+        <p class="mb-10" style="font-size:18px;color:var(--muted);max-width:480px;line-height:1.7;font-weight:400">
+          Internships built for students — not professionals. Real roles from real companies, no noise.
+        </p>
+
+        <div class="flex gap-4 flex-wrap">
+          <button onclick="showPage('register')" class="btn-gold" style="padding:14px 36px;font-size:14px">Start For Free →</button>
+          <button onclick="loadInternships(); showPage('browse')" class="btn-ghost" style="padding:14px 36px;font-size:14px">Browse Roles</button>
+        </div>
+      </div>
+
+      <!-- Floating stat cards -->
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4" style="right:0">
+        <div class="card" style="width:220px;padding:20px">
+          <div style="font-size:32px;font-weight:900;font-family:'Playfair Display',serif;color:var(--gold)">500+</div>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-top:4px">Active Internships</div>
+        </div>
+        <div class="card" style="width:220px;padding:20px">
+          <div style="font-size:32px;font-weight:900;font-family:'Playfair Display',serif;color:var(--blue)">120+</div>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-top:4px">Companies Hiring</div>
+        </div>
+        <div class="card" style="width:220px;padding:20px">
+          <div style="font-size:32px;font-weight:900;font-family:'Playfair Display',serif;color:var(--green)">3k+</div>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-top:4px">Students Placed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LATEST OPENINGS -->
+  <div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="max-w-7xl mx-auto px-6 py-20">
+      <div class="section-line">
+        <h2 style="font-size:28px;font-weight:700;white-space:nowrap">Latest Openings</h2>
+        <button onclick="loadInternships(); showPage('browse')" style="color:var(--gold);font-size:13px;font-weight:700;white-space:nowrap;background:none;border:none;cursor:pointer">View All →</button>
+      </div>
+      <div id="home-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </div>
+  </div>
+
+  <!-- FEATURE STRIP -->
+  <div class="max-w-7xl mx-auto px-6 py-20">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div style="padding:32px;background:var(--card);border:1px solid var(--border)">
+        <div style="font-size:32px;margin-bottom:16px">🎯</div>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Only Internships</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7">No full-time noise. Every role is specifically for students and fresh grads.</p>
+      </div>
+      <div style="padding:32px;background:var(--card);border:1px solid rgba(201,168,76,0.2)">
+        <div style="font-size:32px;margin-bottom:16px">🌍</div>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Global + Local</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7">Browse local postings alongside thousands of global roles from The Muse.</p>
+      </div>
+      <div style="padding:32px;background:var(--card);border:1px solid var(--border)">
+        <div style="font-size:32px;margin-bottom:16px">📋</div>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Track Everything</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7">One dashboard to apply, track status, and manage your entire search.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== BROWSE ========== -->
+<div id="page-browse" class="page">
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <div class="mb-10">
+      <h2 style="font-size:36px;font-weight:700;margin-bottom:6px">Browse Internships</h2>
+      <p style="color:var(--muted);font-size:15px">Local listings + thousands of real roles worldwide</p>
+    </div>
+
+    <!-- Tab bar -->
+    <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:32px;gap:4px">
+      <button id="btab-local" onclick="switchBrowseTab('local')" class="btab-active" style="font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:12px 24px;background:none;border:none;border-bottom:2px solid var(--gold);cursor:pointer;transition:all 0.2s">🏠 Our Listings</button>
+      <button id="btab-muse"  onclick="switchBrowseTab('muse')"  class="btab-inactive" style="font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:12px 24px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s">🌍 Global Jobs <span style="font-size:10px;font-weight:500;opacity:0.5;text-transform:none;letter-spacing:0">via The Muse</span></button>
+    </div>
+
+    <!-- LOCAL -->
+    <div id="browse-panel-local">
+      <div style="background:var(--card);border:1px solid var(--border);padding:24px;margin-bottom:28px">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div><label>City</label><input type="text" id="filter-city" placeholder="e.g. Karachi"/></div>
+          <div><label>Skill</label><input type="text" id="filter-skills" placeholder="e.g. Python"/></div>
+          <div><label>Type</label><select id="filter-remote"><option value="">Any</option><option value="true">Remote</option><option value="false">On-site</option></select></div>
+          <div><label>Pay</label><select id="filter-paid"><option value="">Any</option><option value="true">Paid</option><option value="false">Unpaid</option></select></div>
+        </div>
+        <button onclick="applyFilters()" class="btn-gold" style="padding:10px 28px">Search Roles</button>
+      </div>
+      <div id="browse-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      </div>
+      <div id="browse-empty" class="hidden text-center py-24" style="color:var(--muted)">
+        <div style="font-size:48px;margin-bottom:16px">🔍</div>
+        <p style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px">No results found</p>
+        <p style="font-size:14px;margin-bottom:24px">Try Global Jobs for thousands more opportunities</p>
+        <button onclick="switchBrowseTab('muse'); searchMuseJobs(1)" class="btn-gold">Browse Global Jobs →</button>
+      </div>
+    </div>
+
+    <!-- MUSE -->
+    <div id="browse-panel-muse" class="hidden">
+      <div style="background:var(--card);border:1px solid var(--border);padding:24px;margin-bottom:28px">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="md:col-span-2">
+            <label>Search Jobs</label>
+            <input type="text" id="muse-search" placeholder="e.g. Software Engineer, Data Analyst..." onkeydown="if(event.key==='Enter') searchMuseJobs(1)"/>
+          </div>
+          <div>
+            <label>Category</label>
+            <select id="muse-category" onchange="searchMuseJobs(1)">
+              <option value="">All Categories</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Design & UX">Design & UX</option>
+              <option value="Marketing & Communications">Marketing</option>
+              <option value="Finance">Finance</option>
+              <option value="HR & Recruiting">HR & Recruiting</option>
+              <option value="Sales">Sales</option>
+              <option value="Project Management">Project Management</option>
+              <option value="Customer Service">Customer Service</option>
+              <option value="Legal">Legal</option>
+              <option value="Business & Strategy">Business & Strategy</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 flex-wrap">
+          <button onclick="searchMuseJobs(1)" class="btn-gold" style="padding:10px 28px">🔍 Search</button>
+          <span style="font-size:12px;color:var(--muted)">Powered by <strong style="color:var(--text)">The Muse</strong> — real jobs from Google, Netflix, Spotify & more</span>
+        </div>
+      </div>
+
+      <div id="muse-loading" class="hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+        </div>
+      </div>
+
+      <div id="muse-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+      <div id="muse-empty" class="hidden text-center py-24" style="color:var(--muted)">
+        <div style="font-size:48px;margin-bottom:16px">🌍</div>
+        <p style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text);margin-bottom:8px">No jobs found</p>
+        <p style="font-size:14px">Try a different keyword or category</p>
+      </div>
+
+      <div id="muse-prompt" class="text-center py-24" style="color:var(--muted)">
+        <div style="font-size:48px;margin-bottom:20px">🌍</div>
+        <p style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:8px">Find Jobs at World-Class Companies</p>
+        <p style="font-size:14px;margin-bottom:28px">Google, Netflix, Spotify, Airbnb and thousands more</p>
+        <div class="flex flex-wrap gap-2 justify-center mb-8">
+          <button onclick="quickSearch('Software Engineer')" class="tag tag-blue" style="cursor:pointer;padding:6px 14px;font-size:11px">Software Engineer</button>
+          <button onclick="quickSearch('Data Science')"      class="tag tag-purple" style="cursor:pointer;padding:6px 14px;font-size:11px">Data Science</button>
+          <button onclick="quickSearch('Product Design')"    class="tag tag-orange" style="cursor:pointer;padding:6px 14px;font-size:11px">Product Design</button>
+          <button onclick="quickSearch('Marketing')"         class="tag tag-green" style="cursor:pointer;padding:6px 14px;font-size:11px">Marketing</button>
+          <button onclick="quickSearch('Finance')"           class="tag tag-gold" style="cursor:pointer;padding:6px 14px;font-size:11px">Finance</button>
+        </div>
+        <button onclick="searchMuseJobs(1)" class="btn-gold" style="padding:14px 40px">Load All Jobs</button>
+      </div>
+
+      <div id="muse-pagination" class="hidden flex items-center justify-center gap-4 mt-12 pb-8">
+        <button id="muse-prev" onclick="musePageChange(-1)" class="btn-ghost" style="padding:10px 28px">← Prev</button>
+        <span id="muse-page-info" style="font-size:13px;font-weight:700;color:var(--muted)"></span>
+        <button id="muse-next" onclick="musePageChange(1)"  class="btn-gold"  style="padding:10px 28px">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== REGISTER ========== -->
+<div id="page-register" class="page">
+  <div style="min-height:90vh;display:flex;align-items:flex-start;justify-content:center;padding:60px 24px">
+    <div style="width:100%;max-width:460px">
+      <div style="margin-bottom:32px">
+        <div class="tag tag-gold" style="margin-bottom:16px">Join InternHub</div>
+        <h2 style="font-size:36px;font-weight:700;margin-bottom:8px;line-height:1.1">Create Your<br/>Account</h2>
+        <p style="color:var(--muted);font-size:15px">Start finding internships made for you</p>
+      </div>
+
+      <div class="form-card">
+        <div class="space-y-5" style="display:flex;flex-direction:column;gap:20px">
+          <div><label>Full Name</label><input type="text" id="reg-name" placeholder="Ahmad Abdullah"/></div>
+          <div><label>Email Address</label><input type="email" id="reg-email" placeholder="ahmad@example.com"/></div>
+          <div><label>Password</label><input type="password" id="reg-password" placeholder="At least 8 characters"/></div>
+          <div>
+            <label>I am a...</label>
+            <select id="reg-role">
+              <option value="student">Student — Looking for internships</option>
+              <option value="company">Company — Posting internships</option>
+            </select>
+          </div>
+          <button onclick="register()" class="btn-gold w-full" style="padding:14px;font-size:14px;width:100%">Create Account →</button>
+        </div>
+        <hr class="hdivider"/>
+        <p style="text-align:center;font-size:14px;color:var(--muted)">
+          Already have an account?
+          <button onclick="showPage('login')" style="color:var(--gold);font-weight:700;background:none;border:none;cursor:pointer;margin-left:4px">Log in</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div id="page-login" class="page">
+  <div style="min-height:90vh;display:flex;align-items:flex-start;justify-content:center;padding:60px 24px">
+    <div style="width:100%;max-width:460px">
+      <div style="margin-bottom:32px">
+        <div class="tag tag-gold" style="margin-bottom:16px">Welcome Back</div>
+        <h2 style="font-size:36px;font-weight:700;margin-bottom:8px;line-height:1.1">Sign In to<br/>InternHub</h2>
+        <p style="color:var(--muted);font-size:15px">Continue your internship journey</p>
+      </div>
+
+      <div class="form-card">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div><label>Email Address</label><input type="email" id="login-email" placeholder="you@example.com"/></div>
+          <div><label>Password</label><input type="password" id="login-password" placeholder="Your password"/></div>
+          <button onclick="login()" class="btn-gold" style="padding:14px;font-size:14px;width:100%">Sign In →</button>
+        </div>
+        <hr class="hdivider"/>
+        <p style="text-align:center;font-size:14px;color:var(--muted)">
+          New here?
+          <button onclick="showPage('register')" style="color:var(--gold);font-weight:700;background:none;border:none;cursor:pointer;margin-left:4px">Create account</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== STUDENT DASHBOARD ========== -->
+<div id="page-student-dashboard" class="page">
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <div class="flex items-start justify-between mb-10" style="flex-wrap:wrap;gap:16px">
+      <div>
+        <div class="tag tag-green" style="margin-bottom:12px">Student Dashboard</div>
+        <h2 style="font-size:32px;font-weight:700">My Applications</h2>
+        <p style="color:var(--muted);margin-top:4px">Track your status across every company</p>
+      </div>
+      <button onclick="loadInternships(); showPage('browse')" class="btn-gold">Browse More Roles</button>
+    </div>
+    <div id="student-applications" style="display:flex;flex-direction:column;gap:12px"><div class="skeleton"></div></div>
+    <div id="student-empty" class="hidden text-center py-24" style="color:var(--muted)">
+      <div style="font-size:48px;margin-bottom:16px">📭</div>
+      <p style="font-family:'Playfair Display',serif;font-size:24px;color:var(--text);margin-bottom:8px">No applications yet</p>
+      <p style="font-size:14px;margin-bottom:24px">Start applying to internships and track them here</p>
+      <button onclick="loadInternships(); showPage('browse')" class="btn-gold">Find Internships</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== COMPANY DASHBOARD ========== -->
+<div id="page-company-dashboard" class="page">
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <div class="flex items-start justify-between mb-10" style="flex-wrap:wrap;gap:16px">
+      <div>
+        <div class="tag tag-gold" style="margin-bottom:12px">Company Dashboard</div>
+        <h2 style="font-size:32px;font-weight:700">Manage Listings</h2>
+        <p style="color:var(--muted);margin-top:4px">Post internships and review your applicants</p>
+      </div>
+      <button onclick="openPostModal()" class="btn-gold">+ Post Internship</button>
+    </div>
+
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px">
+      <button id="tab-postings"   onclick="switchTab('postings')"   class="btab-active"   style="font-family:'Cabinet Grotesk',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:12px 20px;background:none;border:none;border-bottom:2px solid var(--gold);cursor:pointer;color:var(--gold)">My Postings</button>
+      <button id="tab-applicants" onclick="switchTab('applicants')" class="btab-inactive" style="font-family:'Cabinet Grotesk',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:12px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--muted)">Applicants</button>
+    </div>
+
+    <div id="panel-postings">
+      <div id="company-postings" class="grid grid-cols-1 md:grid-cols-2 gap-5"><div class="skeleton"></div><div class="skeleton"></div></div>
+      <div id="company-postings-empty" class="hidden text-center py-24" style="color:var(--muted)">
+        <div style="font-size:48px;margin-bottom:16px">📋</div>
+        <p style="font-family:'Playfair Display',serif;font-size:24px;color:var(--text);margin-bottom:24px">No postings yet</p>
+        <button onclick="openPostModal()" class="btn-gold">Post Your First Internship</button>
+      </div>
+    </div>
+
+    <div id="panel-applicants" class="hidden">
+      <div id="company-applicants" style="display:flex;flex-direction:column;gap:12px"></div>
+      <div id="company-applicants-empty" class="hidden text-center py-24" style="color:var(--muted)">
+        <div style="font-size:48px;margin-bottom:16px">👥</div>
+        <p style="font-family:'Playfair Display',serif;font-size:24px;color:var(--text)">No applicants yet</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODAL: POST ========== -->
+<div id="modal-post" class="hidden modal-overlay" onclick="closeModalIfOutside(event,'modal-post')">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div class="tag tag-gold" style="margin-bottom:8px">New Listing</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">Post an Internship</h3>
+      </div>
+      <button onclick="closeModal('modal-post')" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:4px;line-height:1">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div><label>Job Title *</label><input type="text" id="post-title" placeholder="e.g. Frontend Developer Intern"/></div>
+      <div><label>Description</label><textarea id="post-desc" rows="3" placeholder="What will the intern work on?" style="resize:vertical"></textarea></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label>City</label><input type="text" id="post-city" placeholder="Lahore"/></div>
+        <div><label>Duration</label><input type="text" id="post-duration" placeholder="3 months"/></div>
+      </div>
+      <div><label>Required Skills</label><input type="text" id="post-skills" placeholder="Python, FastAPI, SQL (comma separated)"/></div>
+      <div><label>Application Deadline</label><input type="date" id="post-deadline"/></div>
+      <div style="display:flex;gap:24px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:14px;letter-spacing:0;font-weight:500;color:var(--text)">
+          <input type="checkbox" id="post-remote"/> Remote
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:14px;letter-spacing:0;font-weight:500;color:var(--text)">
+          <input type="checkbox" id="post-paid"/> Paid Internship
+        </label>
+      </div>
+      <button onclick="postInternship()" class="btn-gold" style="padding:14px;width:100%;font-size:14px;margin-top:4px">Publish Listing →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODAL: APPLY ========== -->
+<div id="modal-apply" class="hidden modal-overlay" onclick="closeModalIfOutside(event,'modal-apply')">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div class="tag tag-green" style="margin-bottom:8px">Apply Now</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700" id="apply-modal-title">Apply</h3>
+      </div>
+      <button onclick="closeModal('modal-apply')" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:4px;line-height:1">×</button>
+    </div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6">Upload your CV in PDF format. The company will review it and update your status.</p>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div><label>Your CV (PDF only)</label><input type="file" id="apply-cv" accept=".pdf" style="color:var(--muted)"/></div>
+      <button onclick="submitApplication()" class="btn-gold" style="padding:14px;width:100%;font-size:14px">Submit Application →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODAL: DETAIL ========== -->
+<div id="modal-detail" class="hidden modal-overlay" onclick="closeModalIfOutside(event,'modal-detail')">
+  <div class="modal-box" style="max-width:600px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:4px" id="detail-title"></h3>
+        <p style="font-size:14px;color:var(--gold);font-weight:600" id="detail-company"></p>
+      </div>
+      <button onclick="closeModal('modal-detail')" style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:4px;line-height:1;margin-top:4px">×</button>
+    </div>
+    <div id="detail-tags" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px"></div>
+    <p id="detail-desc" style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px"></p>
+    <div class="grid grid-cols-2 gap-4" style="margin-bottom:24px;font-size:14px">
+      <div style="background:var(--subtle);padding:16px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:4px">City</div>
+        <p id="detail-city" style="font-weight:600"></p>
+      </div>
+      <div style="background:var(--subtle);padding:16px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:4px">Duration</div>
+        <p id="detail-duration" style="font-weight:600"></p>
+      </div>
+      <div style="background:var(--subtle);padding:16px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:4px">Skills</div>
+        <p id="detail-skills" style="font-weight:600"></p>
+      </div>
+      <div style="background:var(--subtle);padding:16px">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:4px">Deadline</div>
+        <p id="detail-deadline" style="font-weight:600"></p>
+      </div>
+    </div>
+    <div id="detail-apply-btn"></div>
+  </div>
+</div>
+
+<script>
+  const API      = "http://localhost:8000";
+  const MUSE_API = "https://www.themuse.com/api/public/jobs";
+
+  let token    = localStorage.getItem("token") || null;
+  let userRole = localStorage.getItem("role")  || null;
+  let userName = localStorage.getItem("name")  || null;
+  let applyingToId    = null;
+  let museCurrentPage = 1;
+  let museLastQuery   = "";
+  let museLastCat     = "";
+
+  window.addEventListener("DOMContentLoaded", () => { updateNavbar(); loadHomeListings(); });
+
+  function updateNavbar() {
+    if (token) {
+      document.getElementById("nav-guest").classList.add("hidden");
+      document.getElementById("nav-auth").classList.remove("hidden");
+      document.getElementById("nav-auth").classList.add("flex");
+      document.getElementById("nav-username").textContent = userName || "";
+    } else {
+      document.getElementById("nav-guest").classList.remove("hidden");
+      document.getElementById("nav-auth").classList.add("hidden");
+    }
+  }
+
+  function showPage(name) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page-" + name)?.classList.add("active");
+    window.scrollTo(0, 0);
+  }
+
+  function goHome() { showPage("home"); loadHomeListings(); }
+
+  function showDashboard() {
+    if (userRole === "student")      { showPage("student-dashboard");  loadStudentApplications(); }
+    else if (userRole === "company") { showPage("company-dashboard");  loadCompanyPostings(); }
+  }
+
+  function logout() {
+    token = null; userRole = null; userName = null;
+    localStorage.removeItem("token"); localStorage.removeItem("role");
+    localStorage.removeItem("name");  localStorage.removeItem("user_id");
+    updateNavbar(); showPage("home"); loadHomeListings();
+    toast("Logged out successfully");
+  }
+
+  function toast(msg, isError = false) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.className = "toast show" + (isError ? " error" : "");
+    setTimeout(() => el.classList.remove("show"), 3500);
+  }
+
+  // AUTH
+  async function register() {
+    const name = document.getElementById("reg-name").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const password = document.getElementById("reg-password").value;
+    const role = document.getElementById("reg-role").value;
+    if (!name || !email || !password) return toast("Please fill all fields", true);
+    try {
+      const res = await fetch(`${API}/auth/register`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({name,email,password,role}) });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Registration failed", true);
+      toast("Account created! Please log in.");
+      showPage("login");
+      document.getElementById("login-email").value = email;
+    } catch { toast("Cannot reach server. Is the backend running?", true); }
+  }
+
+  async function login() {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    if (!email || !password) return toast("Enter email and password", true);
+    try {
+      const res = await fetch(`${API}/auth/login`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email,password}) });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Login failed", true);
+      token = data.access_token; userRole = data.role; userName = data.name;
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", userRole);
+      localStorage.setItem("name", userName);
+      if (data.user_id) localStorage.setItem("user_id", data.user_id);
+      updateNavbar(); toast(`Welcome back, ${userName}!`); showDashboard();
+    } catch { toast("Cannot reach server. Is the backend running?", true); }
+  }
+
+  // CARDS
+  function internshipCard(item, showApply = false) {
+    const skills = item.skills ? item.skills.split(",").slice(0,3) : [];
+    const skillTags = skills.map(s => `<span class="tag tag-blue">${s.trim()}</span>`).join(" ");
+    return `
+      <div class="card" style="cursor:pointer" onclick="openDetail(${item.id})">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+          <div style="flex:1;margin-right:12px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;line-height:1.3;margin-bottom:4px">${item.title}</h3>
+            <p style="font-size:13px;color:var(--gold);font-weight:600">${item.company?.company_name || "Company"}</p>
+          </div>
+          <span class="tag ${item.is_paid?'tag-green':'tag-gray'}">${item.is_paid?'Paid':'Unpaid'}</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px">
+          ${item.city||"Location TBD"} &nbsp;·&nbsp; ${item.duration||"Duration TBD"} &nbsp;·&nbsp; ${item.is_remote?'🌐 Remote':'🏢 On-site'}
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">${skillTags}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:14px">
+          <span style="font-size:11px;color:var(--muted);font-weight:600">DEADLINE: ${item.deadline||'OPEN'}</span>
+          ${showApply && token && userRole==='student' ? `<button onclick="event.stopPropagation(); openApply(${item.id},'${item.title}')" class="btn-gold" style="padding:7px 16px;font-size:11px">Apply →</button>` : ''}
+        </div>
+      </div>`;
+  }
+
+  function companyInternshipCard(item) {
+    return `
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+          <h4 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700">${item.title}</h4>
+          <span class="tag ${item.is_open?'tag-green':'tag-red'}">${item.is_open?'Open':'Closed'}</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:4px">${item.city||'City TBD'} · ${item.duration||'Duration TBD'}</p>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${item.is_remote?'🌐 Remote':'🏢 On-site'} · ${item.is_paid?'💰 Paid':'Unpaid'}</p>
+        <div style="display:flex;gap:8px;border-top:1px solid var(--border);padding-top:14px">
+          <button onclick="closeInternship(${item.id})" class="btn-ghost" style="padding:7px 16px;font-size:11px">Close</button>
+          <button onclick="deleteInternship(${item.id})" class="btn-danger" style="padding:7px 16px">Delete</button>
+        </div>
+      </div>`;
+  }
+
+  // LISTINGS
+  async function loadHomeListings() {
+    try {
+      const res = await fetch(`${API}/internships/?limit=6`);
+      const data = await res.json();
+      const container = document.getElementById("home-listings");
+      if (!data.length) {
+        container.innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted)">
+            <p style="font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:8px">No local internships yet</p>
+            <p style="font-size:14px;margin-bottom:20px">Register as a company and post the first listing</p>
+            <button onclick="switchBrowseTab('muse'); showPage('browse'); searchMuseJobs(1)" class="btn-ghost" style="padding:10px 24px">Browse Global Jobs →</button>
+          </div>`;
+        return;
+      }
+      container.innerHTML = data.map(i => internshipCard(i)).join("");
+    } catch {
+      document.getElementById("home-listings").innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--muted);font-size:14px">Backend not running — start with <code style="background:var(--subtle);padding:2px 8px;border-radius:2px">python Main.py</code></div>`;
+    }
+  }
+
+  async function loadInternships(filters = {}) {
+    const container = document.getElementById("browse-listings");
+    const empty     = document.getElementById("browse-empty");
+    container.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+    empty.classList.add("hidden");
+    let url = `${API}/internships/?`;
+    if (filters.city)   url += `city=${encodeURIComponent(filters.city)}&`;
+    if (filters.skills) url += `skills=${encodeURIComponent(filters.skills)}&`;
+    if (filters.is_remote==="true"||filters.is_remote==="false") url += `is_remote=${filters.is_remote}&`;
+    if (filters.is_paid==="true"||filters.is_paid==="false")     url += `is_paid=${filters.is_paid}&`;
+    try {
+      const res  = await fetch(url);
+      const data = await res.json();
+      if (!data.length) { container.innerHTML=""; empty.classList.remove("hidden"); }
+      else { container.innerHTML = data.map(i => internshipCard(i, true)).join(""); }
+    } catch { container.innerHTML = `<div style="grid-column:1/-1;color:var(--red);padding:20px;font-size:14px">Could not load internships. Is the backend running?</div>`; }
+  }
+
+  function applyFilters() {
+    loadInternships({
+      city: document.getElementById("filter-city").value,
+      skills: document.getElementById("filter-skills").value,
+      is_remote: document.getElementById("filter-remote").value,
+      is_paid: document.getElementById("filter-paid").value,
+    });
+  }
+
+  function switchBrowseTab(tab) {
+    const isLocal = tab === "local";
+    document.getElementById("browse-panel-local").classList.toggle("hidden", !isLocal);
+    document.getElementById("browse-panel-muse").classList.toggle("hidden",   isLocal);
+    const activeStyle  = "font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:12px 24px;background:none;border:none;border-bottom:2px solid var(--gold);cursor:pointer;color:var(--gold);transition:all 0.2s";
+    const inactiveStyle= "font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;padding:12px 24px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--muted);transition:all 0.2s";
+    document.getElementById("btab-local").style.cssText = isLocal  ? activeStyle : inactiveStyle;
+    document.getElementById("btab-muse").style.cssText  = !isLocal ? activeStyle : inactiveStyle;
+    if (!isLocal && document.getElementById("muse-listings").innerHTML === "") searchMuseJobs(1);
+  }
+
+  // MUSE API
+  async function searchMuseJobs(page = 1) {
+    const query = document.getElementById("muse-search").value.trim();
+    const cat   = document.getElementById("muse-category").value;
+    museCurrentPage = page; museLastQuery = query; museLastCat = cat;
+
+    document.getElementById("muse-prompt").classList.add("hidden");
+    document.getElementById("muse-empty").classList.add("hidden");
+    document.getElementById("muse-listings").innerHTML = "";
+    document.getElementById("muse-pagination").classList.add("hidden");
+    document.getElementById("muse-loading").classList.remove("hidden");
+
+    let url = `${MUSE_API}?page=${page - 1}&descending=true`;
+    if (query) url += `&query=${encodeURIComponent(query)}`;
+    if (cat)   url += `&category=${encodeURIComponent(cat)}`;
+
+    try {
+      const res  = await fetch(url);
+      const data = await res.json();
+      document.getElementById("muse-loading").classList.add("hidden");
+      const jobs = data.results || [];
+      const totalPages = Math.ceil((data.total || 0) / (data.count || 20));
+
+      if (!jobs.length) { document.getElementById("muse-empty").classList.remove("hidden"); return; }
+
+      document.getElementById("muse-listings").innerHTML = jobs.map(job => museJobCard(job)).join("");
+
+      if (totalPages > 1) {
+        document.getElementById("muse-pagination").classList.remove("hidden");
+        document.getElementById("muse-page-info").textContent = `Page ${page} of ${totalPages}`;
+        document.getElementById("muse-prev").disabled = page <= 1;
+        document.getElementById("muse-next").disabled = page >= totalPages;
+        document.getElementById("muse-prev").style.opacity = page <= 1 ? "0.3" : "1";
+        document.getElementById("muse-next").style.opacity = page >= totalPages ? "0.3" : "1";
+      }
+      window.scrollTo({ top: 300, behavior: "smooth" });
+    } catch {
+      document.getElementById("muse-loading").classList.add("hidden");
+      document.getElementById("muse-listings").innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted)">
+          <p style="font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:8px">Could not load jobs</p>
+          <p style="font-size:14px;margin-bottom:20px">The Muse API may be temporarily unavailable</p>
+          <button onclick="searchMuseJobs(1)" class="btn-ghost" style="padding:10px 24px">Retry</button>
+        </div>`;
+    }
+  }
+
+  function museJobCard(job) {
+    const company  = job.company?.name || "Company";
+    const title    = job.name || "Job Opening";
+    const location = job.locations?.map(l => l.name).join(", ") || "Location not specified";
+    const category = job.categories?.[0]?.name || "";
+    const level    = job.levels?.[0]?.name || "";
+    const url      = job.refs?.landing_page || "#";
+    const isRemote = location.toLowerCase().includes("remote") || location.toLowerCase().includes("flexible");
+    const catColors = { "Engineering":"tag-blue","Data Science":"tag-purple","Design":"tag-orange","Marketing":"tag-green","Finance":"tag-gold" };
+    const catKey   = Object.keys(catColors).find(k => category.includes(k));
+    const tagClass = catColors[catKey] || "tag-gray";
+    return `
+      <div class="muse-card">
+        <div style="flex:1">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+            <div style="flex:1;margin-right:12px">
+              <h3 style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.3;margin-bottom:4px">${title}</h3>
+              <p style="font-size:13px;color:var(--blue);font-weight:600">${company}</p>
+            </div>
+            ${isRemote ? '<span class="tag tag-blue" style="flex-shrink:0">Remote</span>' : ''}
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px">📍 ${location}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
+            ${category ? `<span class="tag ${tagClass}">${category}</span>` : ''}
+            ${level    ? `<span class="tag tag-gray">${level}</span>`       : ''}
+          </div>
+        </div>
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="btn-gold" style="padding:10px 16px;text-align:center;display:block;font-size:12px;text-decoration:none">View & Apply →</a>
+      </div>`;
+  }
+
+  function quickSearch(query) { document.getElementById("muse-search").value = query; searchMuseJobs(1); }
+  function musePageChange(dir) { searchMuseJobs(museCurrentPage + dir); }
+
+  // DETAIL MODAL
+  async function openDetail(id) {
+    try {
+      const res  = await fetch(`${API}/internships/${id}`);
+      const item = await res.json();
+      document.getElementById("detail-title").textContent    = item.title;
+      document.getElementById("detail-company").textContent  = item.company?.company_name || "";
+      document.getElementById("detail-desc").textContent     = item.description || "No description provided.";
+      document.getElementById("detail-city").textContent     = item.city || "—";
+      document.getElementById("detail-duration").textContent = item.duration || "—";
+      document.getElementById("detail-skills").textContent   = item.skills || "—";
+      document.getElementById("detail-deadline").textContent = item.deadline || "Open";
+      document.getElementById("detail-tags").innerHTML = [
+        item.is_paid   ? '<span class="tag tag-green">Paid</span>'  : '<span class="tag tag-gray">Unpaid</span>',
+        item.is_remote ? '<span class="tag tag-blue">Remote</span>' : '<span class="tag tag-gray">On-site</span>',
+        item.is_open   ? '<span class="tag tag-green">Open</span>'  : '<span class="tag tag-red">Closed</span>'
+      ].join(" ");
+      const applyBtn = document.getElementById("detail-apply-btn");
+      if (token && userRole==="student" && item.is_open)
+        applyBtn.innerHTML = `<button onclick="closeModal('modal-detail'); openApply(${item.id},'${item.title}')" class="btn-gold" style="padding:14px;width:100%;font-size:14px">Apply Now →</button>`;
+      else if (!token)
+        applyBtn.innerHTML = `<button onclick="closeModal('modal-detail'); showPage('login')" class="btn-ghost" style="padding:14px;width:100%;font-size:14px">Log In to Apply</button>`;
+      else applyBtn.innerHTML = "";
+      document.getElementById("modal-detail").classList.remove("hidden");
+    } catch { toast("Could not load internship details", true); }
+  }
+
+  // APPLY
+  function openApply(id, title) {
+    if (!token) return showPage("login");
+    applyingToId = id;
+    document.getElementById("apply-modal-title").textContent = title;
+    document.getElementById("apply-cv").value = "";
+    document.getElementById("modal-apply").classList.remove("hidden");
+  }
+
+  async function submitApplication() {
+    const file = document.getElementById("apply-cv").files[0];
+    if (!file) return toast("Please select your CV", true);
+    if (!file.name.endsWith(".pdf")) return toast("CV must be a PDF file", true);
+    const form = new FormData();
+    form.append("cv", file);
+    try {
+      const res  = await fetch(`${API}/applications/apply/${applyingToId}`, { method:"POST", headers:{"Authorization":`Bearer ${token}`}, body:form });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Application failed", true);
+      closeModal("modal-apply"); toast("Application submitted! 🎉");
+    } catch { toast("Server error. Please try again.", true); }
+  }
+
+  // STUDENT DASHBOARD
+  async function loadStudentApplications() {
+    const container = document.getElementById("student-applications");
+    const empty     = document.getElementById("student-empty");
+    container.innerHTML = `<div class="skeleton"></div>`;
+    try {
+      const res  = await fetch(`${API}/applications/student`, { headers:{"Authorization":`Bearer ${token}`} });
+      const data = await res.json();
+      if (!data.length) { container.innerHTML=""; empty.classList.remove("hidden"); return; }
+      empty.classList.add("hidden");
+      container.innerHTML = data.map(app => `
+        <div class="card" style="cursor:default">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between">
+            <div>
+              <h4 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:4px">${app.internship?.title||"Internship"}</h4>
+              <p style="font-size:13px;color:var(--gold);font-weight:600;margin-bottom:4px">${app.internship?.company?.company_name||""}</p>
+              <p style="font-size:12px;color:var(--muted)">Applied ${new Date(app.applied_at).toLocaleDateString("en-PK",{day:"numeric",month:"short",year:"numeric"})}</p>
+            </div>
+            <span class="tag status-${app.status}" style="flex-shrink:0">${app.status.charAt(0).toUpperCase()+app.status.slice(1)}</span>
+          </div>
+        </div>`).join("");
+    } catch { container.innerHTML = `<p style="color:var(--red);font-size:14px">Error loading applications</p>`; }
+  }
+
+  // COMPANY DASHBOARD
+  function switchTab(tab) {
+    const isP = tab === "postings";
+    document.getElementById("panel-postings").classList.toggle("hidden", !isP);
+    document.getElementById("panel-applicants").classList.toggle("hidden", isP);
+    const aStyle = "font-family:'Cabinet Grotesk',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:12px 20px;background:none;border:none;border-bottom:2px solid var(--gold);cursor:pointer;color:var(--gold)";
+    const iStyle = "font-family:'Cabinet Grotesk',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:12px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--muted)";
+    document.getElementById("tab-postings").style.cssText   = isP  ? aStyle : iStyle;
+    document.getElementById("tab-applicants").style.cssText = !isP ? aStyle : iStyle;
+    if (!isP) loadCompanyApplicants();
+  }
+
+  async function loadCompanyPostings() {
+    const container = document.getElementById("company-postings");
+    const empty     = document.getElementById("company-postings-empty");
+    container.innerHTML = `<div class="skeleton"></div><div class="skeleton"></div>`;
+    empty.classList.add("hidden");
+    try {
+      const res  = await fetch(`${API}/internships/`);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      if (!data.length) { container.innerHTML=""; empty.classList.remove("hidden"); return; }
+      container.innerHTML = data.map(item => companyInternshipCard(item)).join("");
+    } catch { container.innerHTML = `<p style="color:var(--red);font-size:14px;grid-column:1/-1">Error loading postings. Is the server running?</p>`; }
+  }
+
+  async function loadCompanyApplicants() {
+    const container = document.getElementById("company-applicants");
+    const empty     = document.getElementById("company-applicants-empty");
+    container.innerHTML = `<div class="skeleton"></div>`;
+    try {
+      const res  = await fetch(`${API}/applications/company`, { headers:{"Authorization":`Bearer ${token}`} });
+      const data = await res.json();
+      if (!data.length) { container.innerHTML=""; empty.classList.remove("hidden"); return; }
+      empty.classList.add("hidden");
+      container.innerHTML = data.map(app => `
+        <div class="card" style="cursor:default">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div>
+              <h4 style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:4px">Applicant #${app.student_id}</h4>
+              <p style="font-size:13px;color:var(--gold);font-weight:600;margin-bottom:2px">${app.internship?.title||"Internship"}</p>
+              <p style="font-size:12px;color:var(--muted)">${new Date(app.applied_at).toLocaleDateString()}</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="tag status-${app.status}">${app.status}</span>
+              <select onchange="updateAppStatus(${app.id},this.value)" style="background:var(--subtle);border:1px solid var(--border);color:var(--text);padding:8px 12px;font-family:'Cabinet Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;width:auto">
+                <option value="pending"  ${app.status==='pending' ?'selected':''}>Pending</option>
+                <option value="accepted" ${app.status==='accepted'?'selected':''}>Accept</option>
+                <option value="rejected" ${app.status==='rejected'?'selected':''}>Reject</option>
+              </select>
+            </div>
+          </div>
+        </div>`).join("");
+    } catch { container.innerHTML = `<p style="color:var(--red);font-size:14px">Error loading applicants</p>`; }
+  }
+
+  async function updateAppStatus(appId, status) {
+    try {
+      const res = await fetch(`${API}/applications/${appId}/status`, { method:"PUT", headers:{"Authorization":`Bearer ${token}`,"Content-Type":"application/json"}, body:JSON.stringify({status}) });
+      if (!res.ok) throw new Error();
+      toast(`Status updated to ${status}`); loadCompanyApplicants();
+    } catch { toast("Failed to update status", true); }
+  }
+
+  function openPostModal() { document.getElementById("modal-post").classList.remove("hidden"); }
+
+  async function postInternship() {
+    const title = document.getElementById("post-title").value.trim();
+    if (!title) return toast("Title is required", true);
+    const body = { title, description:document.getElementById("post-desc").value, city:document.getElementById("post-city").value, duration:document.getElementById("post-duration").value, skills:document.getElementById("post-skills").value, deadline:document.getElementById("post-deadline").value, is_remote:document.getElementById("post-remote").checked, is_paid:document.getElementById("post-paid").checked };
+    try {
+      const res  = await fetch(`${API}/internships/`, { method:"POST", headers:{"Authorization":`Bearer ${token}`,"Content-Type":"application/json"}, body:JSON.stringify(body) });
+      const data = await res.json();
+      if (!res.ok) return toast(data.detail || "Failed to post", true);
+      ["post-title","post-desc","post-city","post-duration","post-skills","post-deadline"].forEach(id => document.getElementById(id).value="");
+      document.getElementById("post-remote").checked = false;
+      document.getElementById("post-paid").checked   = false;
+      closeModal("modal-post"); toast("Internship posted! 🎉");
+      setTimeout(() => loadCompanyPostings(), 300);
+    } catch { toast("Server error. Is the backend running?", true); }
+  }
+
+  async function closeInternship(id) {
+    try {
+      const res = await fetch(`${API}/internships/${id}`, { method:"PUT", headers:{"Authorization":`Bearer ${token}`,"Content-Type":"application/json"}, body:JSON.stringify({is_open:false}) });
+      if (!res.ok) throw new Error();
+      toast("Internship closed"); loadCompanyPostings();
+    } catch { toast("Error closing internship", true); }
+  }
+
+  async function deleteInternship(id) {
+    if (!confirm("Delete this internship? This cannot be undone.")) return;
+    try {
+      const res = await fetch(`${API}/internships/${id}`, { method:"DELETE", headers:{"Authorization":`Bearer ${token}`} });
+      if (!res.ok) throw new Error();
+      toast("Internship deleted"); loadCompanyPostings();
+    } catch { toast("Error deleting internship", true); }
+  }
+
+  function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
+  function closeModalIfOutside(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+</script>
+</body>
+</html>

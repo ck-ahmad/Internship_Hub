@@ -1,0 +1,59 @@
+Problems I Faced While Building the Internship Portal
+======================================================
+
+
+Problem 1 - Server was not starting
+I was running "python Main.py" but nothing was happening.
+Fix: FastAPI needs uvicorn to run. I added uvicorn.run() at the
+bottom of Main.py and after that it started working.
+
+
+Problem 2 - Password hashing was crashing
+When I tried to register a user the server gave a 500 error.
+The terminal said something about bcrypt and __about__ not found.
+Fix: My bcrypt version was too new and not compatible with passlib.
+I ran "pip install bcrypt==4.0.1" and the error went away.
+
+
+Problem 3 - Every API call was returning 404
+The frontend was loading but /internships and /auth/register
+were all giving 404 not found errors.
+Fix: I had app.mount("/") which was blocking all API routes.
+I removed it and used FileResponse to serve the HTML instead.
+After that all routes worked fine.
+
+
+Problem 4 - API calls were doing an extra redirect every time
+Terminal was showing 307 Temporary Redirect before every 200 OK.
+Fix: FastAPI redirects routes that are missing a trailing slash.
+I added a slash at the end of all fetch URLs like /internships/
+and the redirects stopped.
+
+
+Problem 5 - Company dashboard was blinking and going empty
+After posting an internship it would flash on screen for a second
+and then disappear showing no results.
+Fix: The code was checking the applications endpoint first which
+crashes for new companies with zero applicants. I simplified it
+to just directly fetch internships and it worked.
+
+
+Problem 6 - Filters were sending undefined in the URL
+When browsing without selecting a filter the URL looked like
+/internships?is_remote=undefined which broke the search.
+Fix: I added a check to only include filter values in the URL
+if they are actually true or false, otherwise skip them.
+
+
+Problem 7 - Python could not find my modules
+When starting the server I got ModuleNotFoundError for routers,
+models, schemas and core.
+Fix: Python needs an empty __init__.py file inside each folder
+to treat it as a package. I created those files and it worked.
+
+
+Problem 8 - The Muse API was not showing any jobs
+The loading skeletons appeared but no jobs were showing up.
+Fix: The Muse API counts pages starting from 0 but I was sending
+page 1. I changed it to send page minus 1 to the API and jobs
+started loading correctly.

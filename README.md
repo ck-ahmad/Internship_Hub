@@ -11,16 +11,17 @@
 
 ### *Your Career Starts Here.*
 
-**A full-stack internship portal built with FastAPI, plain HTML, Tailwind CSS, and The Muse API**
+**A full-stack internship portal connecting students with companies — built with FastAPI, Tailwind CSS, and The Muse API**
 
 <br/>
 
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Status](https://img.shields.io/badge/Status-v3.0_Complete-gold?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python_3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![n8n](https://img.shields.io/badge/n8n-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)
 
 <br/>
 
@@ -28,84 +29,140 @@
 
 ---
 
-## Table of Contents
+<br/>
 
-- [Why InternHub Exists](#-why-internhub-exists)
-- [Tech Stack](#-tech-stack)
-- [Quick Start](#-quick-start)
-- [Project Structure](#-project-structure)
-- [Class Diagram](#-class-diagram)
-- [ER Diagram](#-er-diagram)
-- [n8n Workflow](#-n8n-workflow)
-- [API Reference](#-api-reference)
-- [Features](#-features)
-- [Database Schema](#-database-schema)
-- [Security Model](#-security-model)
-- [Switch to PostgreSQL](#-switch-to-postgresql)
-- [Bugs Encountered & Fixed](#-bugs-encountered--fixed)
-- [What You Learn Building This](#-what-you-learn-building-this)
-- [Roadmap](#-roadmap)
+## 🚧 **Project Status**
+
+> This project has completed **InternHub v3.0** — Full-Stack Portal with LinkedIn-Style Profiles, Global Job Listings, and Dark Premium UI.
 
 ---
 
-## ◈ Why InternHub Exists
+## 💡 **Overview**
 
-LinkedIn is built for professionals with years of experience. Students get lost in the noise — their profiles look empty, they compete against senior engineers for the same listings, and nothing is built for how they actually search for work.
+LinkedIn is built for professionals. Students get lost in the noise — their profiles look empty, they compete with senior engineers for the same listings, and nothing is designed for how they actually search for work.
 
-**InternHub fixes this.** Every single feature is designed around the student-to-internship workflow. Companies post exclusively for interns. Students apply without noise. Profiles are built to show potential, not just experience.
+**InternHub fixes this.** Every feature is built around the student-to-internship workflow. Companies post exclusively for interns. Students apply without noise. Profiles are built to show potential, not just experience. And with The Muse API integration, students get access to thousands of real jobs from Google, Netflix, Spotify — for free, no API key needed.
 
-> *We built this to learn. But we built it properly.*
+> 🎓 **Students** can browse, apply, track status, and build a public profile<br/>
+> 🏢 **Companies** can post listings, review applicants, and manage everything from a dashboard<br/>
+> 🌍 **Global Jobs** from The Muse API — thousands of real roles, search by keyword or category<br/>
+> 👤 **Public Profiles** — LinkedIn-style with photo, CV, experience, education, social links
 
 ---
 
-## ◈ Tech Stack
+## 🎯 **Core Objectives**
+
+* 🎓 Give students a dedicated space — not competing with professionals
+* 🏢 Let companies reach intern-specific talent without noise
+* 🔐 Secure role-based authentication — students and companies have different access
+* ☁️ Store CVs, photos, and profiles in cloud storage
+* 🌍 Combine local listings with global job discovery via The Muse API
+* 👤 LinkedIn-style public profiles for every user
+* 📊 Dashboards for both students (track applications) and companies (manage listings)
+
+---
+
+## ⚙️ **Technology Stack**
+
+| Layer | Tools / Frameworks |
+| --- | --- |
+| **Backend** | FastAPI (Python) |
+| **Database** | SQLite (dev) / PostgreSQL (prod) |
+| **ORM** | SQLAlchemy |
+| **Authentication** | OAuth2 + JWT + bcrypt |
+| **Validation** | Pydantic |
+| **Frontend** | Plain HTML + Tailwind CSS — no framework |
+| **File Uploads** | FastAPI UploadFile — CV, photo, cover |
+| **External API** | The Muse — free, no key required |
+| **API Docs** | Swagger UI (auto-generated) |
+| **Deployment** | Single command: `python Main.py` |
+
+---
+
+## ✨ **Key Features**
+
+### 🎓 **For Students**
+- **🔍 Browse & Search**: Filter internships by city, skill, remote, paid/unpaid
+- **📄 Apply**: One-click apply with PDF CV upload — one application per listing
+- **📊 Track Status**: Live status — Pending → Accepted / Rejected
+- **👤 Public Profile**: LinkedIn-style profile with photo, bio, skills, experience, education, CV, social links
+
+### 🏢 **For Companies**
+- **✏️ Post Listings**: Title, skills, city, duration, deadline, paid/remote flags
+- **👥 Review Applicants**: See everyone who applied and when
+- **✅ Manage Status**: Accept, reject, or keep pending per applicant
+- **🔒 Manage Listings**: Close or delete from dashboard
+
+### 👤 **Profiles (Both Roles)**
+- Profile photo + cover photo — click to upload, updates instantly
+- Headline, bio, location — visible on public URL
+- Skills as tags, work experience with company and dates
+- Education with school, degree, field, years
+- Resume PDF — uploaded and downloadable by anyone
+- Social links — LinkedIn, GitHub, Portfolio
+
+### 🌍 **Global Jobs — The Muse API**
+- Free public API — no signup or key required
+- Search by keyword or pick a category
+- Quick-search chips: Software Engineer, Data Science, Marketing...
+- Paginated results — browse thousands of listings
+- Every card links directly to the real application page
+
+---
+
+## 🧩 **System Architecture**
+
+### **Major Modules**
+
+| Module | Description |
+| --- | --- |
+| 🔐 **Authentication** | JWT + bcrypt — role-based guards on every protected endpoint |
+| 🎓 **Student System** | Browse, filter, apply with PDF, track status live |
+| 🏢 **Company System** | Post listings, view applicants, update status |
+| 👤 **Profile System** | LinkedIn-style profiles — photo, CV, experience, education |
+| 🌍 **Global Jobs** | The Muse API integration — thousands of real roles |
+| 📊 **Dashboards** | Separate dashboards for students and companies |
+
+---
+
+## 🔄 **System Workflow**
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        INTERNHUB v3.0                           │
-├──────────────────────┬──────────────────────────────────────────┤
-│  Backend             │  FastAPI + SQLAlchemy + JWT + bcrypt      │
-│  Database            │  SQLite (dev) → PostgreSQL (prod)         │
-│  Frontend            │  Plain HTML + Tailwind CSS — no framework │
-│  Auth                │  OAuth2 + JWT tokens + role-based guards  │
-│  File Uploads        │  CV (PDF) + Profile Photo + Cover Photo   │
-│  External API        │  The Muse — free, no key required         │
-│  Profiles            │  LinkedIn-style public profile pages      │
-│  Automation          │  n8n workflows for notifications + AI     │
-│  Deployment-ready    │  Single command: python Main.py           │
-└──────────────────────┴──────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                         SYSTEM FLOW                                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+  👤 User registers as Student or Company
+          │
+          ▼
+  🔐 JWT token issued on login — role stored in token
+          │
+          ├─────────────────────┬──────────────────────┐
+          ▼                     ▼                      ▼
+  🎓 STUDENT                🏢 COMPANY            🌍 GLOBAL JOBS
+  Browse internships        Post a listing         Search The Muse API
+  Apply with PDF CV         View applicants        Filter by category
+  Track status live         Accept / Reject        Click → apply direct
+  Build public profile      Close / Delete         No API key needed
+          │                     │
+          ▼                     ▼
+  📊 Student Dashboard      📊 Company Dashboard
+  All my applications       All my listings
+  Status per company        All applicants per role
+          │                     │
+          ▼                     ▼
+  🗄️ Applications Table   🗄️ Internships Table
+  CV stored in /uploads     Listings in database
 ```
 
 ---
 
-## ◈ Quick Start
-
-```bash
-# 1. Install dependencies
-pip install -r Requirement.txt
-
-# 2. Run the app
-python Main.py
-
-# 3. Open in browser
-http://localhost:8000          →  App
-http://localhost:8000/profile  →  Profile page
-http://localhost:8000/docs     →  Swagger API docs
-```
-
-> ⚠️ **Python 3.12 users** — run this before starting or registration will crash:
-> ```bash
-> pip install bcrypt==4.0.1
-> ```
-
----
-
-## ◈ Project Structure
+## 🛠️ **Project Structure**
 
 ```
 InternshipsPortal/
 │
-├── 📄 Main.py                    ← Start here. uvicorn.run() lives here.
+├── 📄 Main.py                    ← Entry point — run this
 ├── 📄 database.py                ← SQLAlchemy engine, session, Base
 ├── 📄 Requirement.txt            ← All pip dependencies
 │
@@ -140,309 +197,220 @@ InternshipsPortal/
 
 ---
 
-## ◈ Class Diagram
+## 🚀 **API Endpoints**
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                         User                            │
-├─────────────────────────────────────────────────────────┤
-│  + id          : Integer (PK)                           │
-│  + name        : String                                 │
-│  + email       : String  (unique)                       │
-│  + password    : String  (bcrypt hashed)                │
-│  + role        : Enum [student | company]               │
-│  + created_at  : DateTime                               │
-├─────────────────────────────────────────────────────────┤
-│  + register()  + login()                                │
-└────────────────┬────────────────────┬───────────────────┘
-                 │ 1:1                 │ 1:1
-                 ▼                    ▼
-┌───────────────────────┐   ┌───────────────────────────┐
-│        Profile        │   │          Company          │
-├───────────────────────┤   ├───────────────────────────┤
-│  + user_id   : FK     │   │  + id           : PK      │
-│  + headline  : String │   │  + company_name : String  │
-│  + bio       : Text   │   │  + description  : Text    │
-│  + location  : String │   │  + location     : String  │
-│  + skills    : String │   │  + owner_id     : FK→User │
-│  + photo_path: String │   ├───────────────────────────┤
-│  + cover_path: String │   │  + create()               │
-│  + cv_path   : String │   │  + update()               │
-│  + linkedin_url       │   │  + get_listings()         │
-│  + github_url         │   └────────────┬──────────────┘
-│  + website_url        │                │ 1:N
-├───────────────────────┤                ▼
-│  + update()           │   ┌───────────────────────────┐
-│  + upload_cv()        │   │        Internship         │
-│  + upload_photo()     │   ├───────────────────────────┤
-└────────┬──────────────┘   │  + id          : PK       │
-         │                  │  + title       : String   │
-    ┌────┴────┐             │  + description : Text     │
-    │ 1:N     │ 1:N         │  + skills      : String   │
-    ▼         ▼             │  + city        : String   │
-┌──────────┐ ┌───────────┐  │  + duration    : String   │
-│Education │ │Experience │  │  + is_remote   : Boolean  │
-├──────────┤ ├───────────┤  │  + is_paid     : Boolean  │
-│profile_id│ │profile_id │  │  + deadline    : Date     │
-│school    │ │title      │  │  + is_open     : Boolean  │
-│degree    │ │company    │  │  + company_id  : FK       │
-│field     │ │location   │  ├───────────────────────────┤
-│start_year│ │start_date │  │  + create()               │
-│end_year  │ │end_date   │  │  + close()                │
-└──────────┘ │description│  │  + delete()               │
-             └───────────┘  └────────────┬──────────────┘
-                                         │ 1:N
-                                         ▼
-                            ┌───────────────────────────┐
-                            │        Application        │
-                            ├───────────────────────────┤
-                            │  + id           : PK      │
-                            │  + student_id   : FK→User │
-                            │  + internship_id: FK      │
-                            │  + status       : Enum    │
-                            │    [pending|accepted      │
-                            │     |rejected]            │
-                            │  + cv_path      : String  │
-                            │  + applied_at   : DateTime│
-                            ├───────────────────────────┤
-                            │  + apply()                │
-                            │  + update_status()        │
-                            └───────────────────────────┘
-```
+### Authentication
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/auth/register` | Register as student or company |
+| POST | `/auth/login` | Login — returns JWT token + user_id |
+
+### Internships
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/internships/` | List all open listings — supports filters |
+| GET | `/internships/{id}` | Single listing with company info |
+| POST | `/internships/` | Create new internship (Company) |
+| PUT | `/internships/{id}` | Update fields or close listing (Company) |
+| DELETE | `/internships/{id}` | Permanently delete listing (Company) |
+
+### Applications
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | `/applications/apply/{id}` | Apply — upload PDF CV (Student) |
+| GET | `/applications/student` | My applications + live status (Student) |
+| GET | `/applications/company` | All applicants for my listings (Company) |
+| PUT | `/applications/{id}/status` | pending / accepted / rejected (Company) |
+
+### Profiles
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/profiles/me` | Fetch own profile — creates if new |
+| PUT | `/profiles/me` | Update bio, headline, location, links |
+| POST | `/profiles/me/photo` | Upload profile photo (JPG/PNG/WEBP) |
+| POST | `/profiles/me/cover` | Upload cover photo |
+| POST | `/profiles/me/cv` | Upload resume PDF |
+| POST | `/profiles/me/experience` | Add work experience entry |
+| DELETE | `/profiles/me/experience/{id}` | Remove experience entry |
+| POST | `/profiles/me/education` | Add education entry |
+| DELETE | `/profiles/me/education/{id}` | Remove education entry |
+| GET | `/profiles/{user_id}` | View any user's public profile |
 
 ---
 
-## ◈ ER Diagram
+## 🔄 **n8n Automation Workflow**
+
+> InternHub's core pipelines — applying, reviewing, status updating — can be visualized and automated using **n8n**. The diagrams below show the full node-based flow for each major pipeline.
+
+### Pipeline 1 — Student Applies for Internship
+
+```mermaid
+flowchart LR
+    classDef trigger  fill:#ea4b71,stroke:#c73d60,color:#fff
+    classDef process  fill:#1e293b,stroke:#475569,color:#e2e8f0
+    classDef validate fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef storage  fill:#065f46,stroke:#059669,color:#fff
+    classDef notify   fill:#92400e,stroke:#d97706,color:#fff
+    classDef done     fill:#14532d,stroke:#16a34a,color:#fff
+
+    A([🖱️ Webhook Trigger\nPOST /applications/apply]):::trigger
+    B[🔐 JWT Auth Node\nVerify student token\nExtract user_id]:::process
+    C[📋 HTTP Request\nGET /internships/id\nCheck is_open = true]:::process
+    D{✅ Internship\nStill Open?}:::validate
+    E[🚫 Error Response\nInternship closed\nReturn 404]:::notify
+    F[🔍 DB Query Node\nCheck duplicate\napplication exists?]:::process
+    G{👤 Already\nApplied?}:::validate
+    H[🚫 Error Response\nDuplicate application\nReturn 400]:::notify
+    I[📄 File Validator\nCheck CV = .pdf\nReject other formats]:::process
+    J[💾 Save File Node\nuploads/cvs/\nstudent_id + filename]:::storage
+    K[🗄️ Database Node\nINSERT application\nstatus = pending]:::storage
+    L([✅ Success Response\nApplication submitted\nReturn 201]):::done
+
+    A --> B --> C --> D
+    D -->|Closed| E
+    D -->|Open| F
+    F --> G
+    G -->|Yes| H
+    G -->|No| I
+    I --> J --> K --> L
+```
+
+### Pipeline 2 — Company Reviews & Updates Status
+
+```mermaid
+flowchart LR
+    classDef trigger  fill:#ea4b71,stroke:#c73d60,color:#fff
+    classDef process  fill:#1e293b,stroke:#475569,color:#e2e8f0
+    classDef validate fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef storage  fill:#065f46,stroke:#059669,color:#fff
+    classDef notify   fill:#92400e,stroke:#d97706,color:#fff
+    classDef done     fill:#14532d,stroke:#16a34a,color:#fff
+
+    A([🖱️ Webhook Trigger\nPUT /applications/id/status]):::trigger
+    B[🔐 JWT Auth Node\nVerify company token\nExtract company_id]:::process
+    C[🔍 DB Query Node\nFetch application\nwith internship info]:::process
+    D{🏢 Company Owns\nThis Listing?}:::validate
+    E[🚫 403 Forbidden\nNot your applicant]:::notify
+    F[✏️ Set Node\nValidate status value\npending/accepted/rejected]:::process
+    G{📋 Valid\nStatus?}:::validate
+    H[🚫 400 Bad Request\nInvalid status value]:::notify
+    I[🗄️ Database Node\nUPDATE application\nSET status = new_value]:::storage
+    J([✅ Return Updated\nApplication object]):::done
+
+    A --> B --> C --> D
+    D -->|No| E
+    D -->|Yes| F
+    F --> G
+    G -->|Invalid| H
+    G -->|Valid| I --> J
+```
+
+### Pipeline 3 — Full Platform End to End
+
+```mermaid
+flowchart TD
+    classDef student  fill:#1d4ed8,stroke:#1e40af,color:#fff
+    classDef company  fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef api      fill:#1e293b,stroke:#475569,color:#e2e8f0
+    classDef db       fill:#065f46,stroke:#059669,color:#fff
+    classDef muse     fill:#92400e,stroke:#d97706,color:#fff
+    classDef profile  fill:#0e7490,stroke:#0891b2,color:#fff
+
+    S([👤 Student\nRegisters]):::student
+    C([🏢 Company\nRegisters]):::company
+
+    S --> SA[POST /auth/register\nrole = student]:::api
+    C --> CA[POST /auth/register\nrole = company]:::api
+
+    SA --> DB1[(Users Table\npassword hashed)]:::db
+    CA --> DB1
+    CA --> DB2[(Companies Table\nauto-created)]:::db
+
+    DB1 --> LOGIN[POST /auth/login\nReturns JWT token]:::api
+    LOGIN --> SF & CF & PF & MF
+
+    subgraph SF [🎓 Student Journey]
+        direction TB
+        BR[GET /internships/\nBrowse + filter]:::api
+        AP[POST /applications/apply\nUpload PDF CV]:::api
+        TR[GET /applications/student\nTrack status live]:::api
+        BR --> AP --> TR
+    end
+
+    subgraph CF [🏢 Company Journey]
+        direction TB
+        POST[POST /internships/\nCreate listing]:::api
+        VIEW[GET /applications/company\nView applicants]:::api
+        UPD[PUT /applications/id/status\nAccept or Reject]:::api
+        POST --> VIEW --> UPD
+    end
+
+    subgraph PF [👤 Profile System]
+        direction TB
+        P1[PUT /profiles/me\nHeadline + bio + links]:::profile
+        P2[POST /profiles/me/photo\nUpload profile photo]:::profile
+        P3[POST /profiles/me/experience\nAdd work history]:::profile
+        P4[GET /profiles/user_id\nPublic profile view]:::profile
+        P1 --> P2 --> P3 --> P4
+    end
+
+    subgraph MF [🌍 Global Jobs]
+        direction TB
+        M1[Frontend calls\nThe Muse API directly]:::muse
+        M2[Jobs from Google\nNetflix · Spotify]:::muse
+        M3[Paginate + filter\ncategory + keyword]:::muse
+        M1 --> M2 --> M3
+    end
+
+    SF --> DB3[(Applications Table\nCV stored in /uploads)]:::db
+    CF --> DB3
+    PF --> DB4[(Profiles + Education\n+ Experience Tables)]:::db
+```
+
+### n8n Node Reference
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                  │
-│   USERS ──────────────── 1:1 ──────────────── PROFILES                          │
-│     │                                             │                             │
-│     │ 1:1                                    ┌────┴────┐                        │
-│     │                                        │         │                        │
-│     ▼                                       1:N       1:N                       │
-│   COMPANIES                                  ▼         ▼                        │
-│     │                                    EDUCATION  EXPERIENCE                  │
-│     │ 1:N                                                                       │
-│     │                                                                           │
-│     ▼                                                                           │
-│   INTERNSHIPS ─────────────────────────── 1:N ──── APPLICATIONS                 │
-│                                                          │                      │
-│                                                          │ N:1                  │
-│                                                          │                      │
-│                                                       USERS                     │
-│                                                    (student_id)                 │
-│                                                                                  │
-└──────────────────────────────────────────────────────────────────────────────────┘
-
-Table: USERS
-  id · name · email (unique) · password (hashed) · role · created_at
-
-Table: PROFILES
-  user_id (FK) · headline · bio · location · skills
-  photo_path · cover_path · cv_path
-  linkedin_url · github_url · website_url
-
-Table: EDUCATION
-  id · profile_id (FK) · school · degree · field · start_year · end_year
-
-Table: EXPERIENCE
-  id · profile_id (FK) · title · company · location
-  start_date · end_date · description
-
-Table: COMPANIES
-  id · company_name · description · location · owner_id (FK→Users)
-
-Table: INTERNSHIPS
-  id · title · description · skills · city · duration
-  is_remote · is_paid · deadline · is_open · company_id (FK)
-
-Table: APPLICATIONS
-  id · student_id (FK→Users) · internship_id (FK)
-  status · cv_path · applied_at
+┌──────────────────────────────────────────────────────────────────────┐
+│                      WORKFLOW NODES USED                             │
+├──────────────────────┬───────────────────────────────────────────────┤
+│  Webhook Trigger     │  Receives incoming HTTP requests from the app │
+│  JWT Auth Node       │  Decodes and verifies Bearer token            │
+│  HTTP Request Node   │  Calls FastAPI endpoints internally           │
+│  IF / Switch Node    │  Validates conditions — open, duplicate, role │
+│  Database Node       │  Direct SQLite / PostgreSQL queries           │
+│  File Validator      │  Checks file extension before saving to disk  │
+│  Save File Node      │  Writes CV / photo to the uploads/ directory  │
+│  Set Node            │  Transforms and validates data between steps  │
+│  Error Response      │  Returns 4xx with detail message on failure   │
+│  Success Response    │  Returns 2xx with result data on success      │
+└──────────────────────┴───────────────────────────────────────────────┘
 ```
+
+### How to Import Into n8n
+
+```bash
+# 1. Install n8n
+npm install -g n8n
+
+# 2. Start
+n8n start
+
+# 3. Open browser
+http://localhost:5678
+
+# 4. Import workflow
+Settings → Import Workflow → select internhub_workflow.json
+
+# 5. Set credentials
+HTTP Nodes    → Base URL: http://localhost:8000
+Database Node → Path: ./internship_portal.db
+```
+
+> 💡 Workflow JSON is available in the `/n8n/` folder of this repository.
 
 ---
 
-## ◈ n8n Workflow
-
-InternHub integrates with **n8n** for automation — application notifications, AI-powered skill matching, and deadline reminders.
-
-### Workflow 1 — Application Lifecycle (Real-Time)
-
-```
-[Webhook Trigger]          POST /applications/apply/{id}
-        │
-        ▼
-[Function Node]            Validate PDF extension + JWT token
-        │
-        ▼
-[IF Condition]             Is input valid?
-        │
-   ┌────┴────┐
-  YES       NO
-   │         │
-   ▼         ▼
-[Postgres]  [Error Response]
-Save app     Return HTTP 400
-status=      "Invalid file or
-pending      unauthorized"
-   │
-   ├──────────────────────────────────────┐
-   │                                      │
-   ▼                                      ▼
-[Gmail Node]                         [Slack Node]
-Send to student:                     Alert company channel:
-"Application received for            "New applicant for
- {internship_title}"                  {internship_title}"
-                                          │
-                                          ▼
-                                    [OpenAI Node]
-                                    Compare student skills
-                                    vs internship skills
-                                    → Generate match score
-                                    → Rank among applicants
-```
-
-### Workflow 2 — Deadline Reminders (Scheduled)
-
-```
-[Cron Trigger]             Every day at 09:00 AM
-        │
-        ▼
-[Postgres Node]            SELECT internships WHERE
-                           deadline <= NOW() + 2 days
-                           AND is_open = true
-        │
-        ▼
-[Split In Batches]         Loop over expiring listings
-        │
-        ▼
-[Postgres Node]            Find students who haven't
-                           applied to this listing
-        │
-        ▼
-[Gmail Node]               Send reminder:
-                           "⏰ {title} closes in 2 days!
-                            Don't miss your chance."
-```
-
-### Workflow 3 — Status Change Notification
-
-```
-[Webhook Trigger]          PUT /applications/{id}/status
-        │
-        ▼
-[IF Condition]             status == "accepted" OR "rejected"?
-        │
-        ▼
-[Gmail Node]               Send to student:
-                           ✅ "Congratulations! You've been accepted"
-                           ❌ "Your application was not selected"
-        │
-        ▼
-[HTTP Request]             POST to InternHub API
-                           Update application record in DB
-```
-
-### n8n Node Types Used
-
-| Node | Purpose |
-|------|---------|
-| `Webhook` | Trigger workflows from InternHub API calls |
-| `Function` | Custom JS validation logic |
-| `IF` | Branch on conditions (valid/invalid, status type) |
-| `Postgres` | Read/write directly to InternHub database |
-| `Gmail` | Email notifications to students and companies |
-| `Slack` | Company channel alerts for new applicants |
-| `OpenAI` | AI skill-matching and applicant ranking |
-| `Cron` | Scheduled triggers for deadline checks |
-| `Split In Batches` | Loop over multiple listings/students |
-| `HTTP Request` | Call back to InternHub REST API |
-
----
-
-## ◈ API Reference
-
-### 🔐 Authentication
-
-| Method | Endpoint | Access | Description |
-|--------|----------|--------|-------------|
-| `POST` | `/auth/register` | Public | Register as student or company |
-| `POST` | `/auth/login` | Public | Login → receive JWT token + user_id |
-
-### 💼 Internships
-
-| Method | Endpoint | Access | Description |
-|--------|----------|--------|-------------|
-| `GET` | `/internships/` | Public | List all open listings |
-| `GET` | `/internships/{id}` | Public | Single listing with company info |
-| `POST` | `/internships/` | Company | Create new internship listing |
-| `PUT` | `/internships/{id}` | Company | Update fields or close listing |
-| `DELETE` | `/internships/{id}` | Company | Permanently delete listing |
-
-> Query params: `?city=Lahore&skills=Python&is_remote=true&is_paid=false`
-
-### 📋 Applications
-
-| Method | Endpoint | Access | Description |
-|--------|----------|--------|-------------|
-| `POST` | `/applications/apply/{id}` | Student | Apply — uploads PDF CV |
-| `GET` | `/applications/student` | Student | My applications + live status |
-| `GET` | `/applications/company` | Company | All applicants for my listings |
-| `PUT` | `/applications/{id}/status` | Company | pending \| accepted \| rejected |
-
-### 👤 Profiles
-
-| Method | Endpoint | Access | Description |
-|--------|----------|--------|-------------|
-| `GET` | `/profiles/me` | Auth | Fetch own profile (creates if new) |
-| `PUT` | `/profiles/me` | Auth | Update bio, headline, location, links |
-| `POST` | `/profiles/me/photo` | Auth | Upload profile photo (JPG/PNG/WEBP) |
-| `POST` | `/profiles/me/cover` | Auth | Upload cover photo |
-| `POST` | `/profiles/me/cv` | Auth | Upload resume PDF |
-| `POST` | `/profiles/me/experience` | Auth | Add work experience entry |
-| `DELETE` | `/profiles/me/experience/{id}` | Auth | Remove experience entry |
-| `POST` | `/profiles/me/education` | Auth | Add education entry |
-| `DELETE` | `/profiles/me/education/{id}` | Auth | Remove education entry |
-| `GET` | `/profiles/{user_id}` | Public | View any user's public profile |
-
----
-
-## ◈ Features
-
-### For Students
-- 🔍 Browse internships — filter by city, skill, remote, paid/unpaid
-- 📄 Apply with one click — upload PDF CV, one application per listing
-- 📊 Track status live — Pending → Accepted / Rejected
-- 👤 Build a public profile — photo, bio, skills, experience, education, CV
-
-### For Companies
-- ✏️ Post internships — title, skills, city, duration, deadline, paid/remote flags
-- 👥 View all applicants — see who applied and when
-- ✅ Update status — accept, reject, or keep pending for each applicant
-- 🔒 Close or delete listings from the dashboard
-
-### LinkedIn-Style Profiles *(both roles)*
-- Profile photo + cover photo — click to upload, updates instantly
-- Headline, bio, and location visible on public URL
-- Skills rendered as tags
-- Work experience with company, location, dates, description
-- Education with school, degree, field, years
-- Resume PDF — uploaded and downloadable by anyone
-- Social links — LinkedIn, GitHub, Portfolio website
-
-### Global Jobs — The Muse API
-- 🌍 Thousands of real jobs — no API key, completely free
-- Search by keyword or category: Engineering, Data Science, Design, Marketing
-- Quick-search chips for the most popular roles
-- Paginated results — browse through everything
-- Every card links directly to the real application page
-
----
-
-## ◈ Database Schema
+## 📊 **Database Design**
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -453,9 +421,9 @@ Send to student:                     Alert company channel:
                              ▼
 ┌──────────────────────────────────────────────────────────────────────┐
 │ PROFILES                                                             │
-│  user_id · headline · bio · location · skills                        │
-│  photo_path · cover_path · cv_path                                   │
-│  linkedin_url · github_url · website_url                             │
+│  user_id · headline · bio · location · skills                       │
+│  photo_path · cover_path · cv_path                                  │
+│  linkedin_url · github_url · website_url                            │
 └─────────┬────────────────────────┬───────────────────────────────────┘
           │ one-to-many             │ one-to-many
           ▼                         ▼
@@ -489,118 +457,217 @@ Send to student:                     Alert company channel:
 
 ---
 
-## ◈ Security Model
+## 🔐 **Security**
 
 ```
-Passwords       bcrypt hashed via passlib — plain text never touches the database
-Tokens          JWT with 24-hour expiry — stored client-side in localStorage
-Role Guards     require_role("student") and require_role("company") decorators
-                protect every sensitive endpoint at the FastAPI dependency level
-CV Uploads      Server validates .pdf extension before saving — rejects anything else
-Photo Uploads   Server validates .jpg .jpeg .png .webp — rejects everything else
-CORS            Allow-all in development — change allow_origins in Main.py for prod
-Double Apply    Database-level check — one student can only apply once per listing
+Passwords       bcrypt hashed via passlib — plain text never stored
+Tokens          JWT with 24-hour expiry — stored in localStorage
+Role Guards     require_role("student") / require_role("company")
+                applied as FastAPI dependency on every protected route
+CV Uploads      .pdf only — validated server-side before saving
+Photo Uploads   .jpg .jpeg .png .webp — all others rejected
+CORS            Allow-all in dev — restrict allow_origins in production
+Double Apply    DB-level check — one student per internship per listing
 ```
 
 ---
 
-## ◈ Switch to PostgreSQL
+## 🧪 **Testing Strategy**
 
-Open `database.py` and swap the URL:
+- ✅ Authentication flow (Register + Login + JWT decode)
+- ✅ Role guards (student endpoints reject company tokens and vice versa)
+- ✅ Internship CRUD (create, read, update, delete, close)
+- ✅ Application flow (apply, duplicate check, status update)
+- ✅ File upload validation (PDF for CV, image types for photos)
+- ✅ Profile CRUD (create, update, add/remove experience and education)
+- ✅ The Muse API integration (search, pagination, error handling)
+- ✅ Manual testing via Swagger UI at `/docs`
 
-```python
-# Default — SQLite, zero setup
-DATABASE_URL = "sqlite:///./internship_portal.db"
+---
 
-# Production — PostgreSQL
-DATABASE_URL = "postgresql://username:password@localhost/internhub"
+## 🚀 **Getting Started**
+
+```bash
+# 1. Install dependencies
+pip install -r Requirement.txt
+
+# Python 3.12 fix — run this if registration crashes
+pip install bcrypt==4.0.1
+
+# 2. Start the server
+python Main.py
+
+# 3. Open in browser
+http://localhost:8000          → Frontend
+http://localhost:8000/profile  → Profile page
+http://localhost:8000/docs     → Swagger API docs
 ```
 
-Then install the driver:
+### Switch to PostgreSQL
+
+```python
+# database.py — swap the URL
+DATABASE_URL = "sqlite:///./internship_portal.db"   # default
+DATABASE_URL = "postgresql://user:password@localhost/internhub"  # production
+```
 
 ```bash
 pip install psycopg2-binary
 ```
 
-Everything else stays exactly the same.
+---
+
+## 📈 **Expected Results**
+
+* ✅ Students find internships filtered to their needs — no noise from full-time listings
+* ✅ Companies reach intern-specific talent with clean applicant management
+* ✅ CVs and profiles stored safely — accessible from any device
+* ✅ Global job discovery via The Muse — no API key, no cost
+* ✅ Public profiles shareable as URLs — like LinkedIn but for students
+* ✅ Single command to run — zero deployment complexity
 
 ---
 
-## ◈ Bugs Encountered & Fixed
+## 🔮 **Future Enhancements**
 
-> *These are real problems that came up during development — not theoretical.*
+✨ *Planned Features...*
 
-| # | Problem | Fix |
-|---|---------|-----|
-| 1 | `python Main.py` does nothing | FastAPI needs uvicorn — added `uvicorn.run()` |
-| 2 | bcrypt crashes on Python 3.12 | `pip install bcrypt==4.0.1` |
-| 3 | Every API route returns 404 | `app.mount("/")` caught all routes — removed it |
-| 4 | 307 redirect on every API call | Added trailing slash to all `fetch()` URLs |
-| 5 | Dashboard blinks then empties | Removed broken `apps` dependency in `loadPostings()` |
-| 6 | Filters send `undefined` in the URL | Added value check before appending to URL string |
-| 7 | `ModuleNotFoundError` on startup | Created `__init__.py` in every subfolder |
-| 8 | Muse API shows blank results | API uses 0-indexed pages — UI was sending `1` |
+* 📧 **Email notifications** when application status changes
+* 🤖 **AI recommendations** — suggest internships based on profile skills
+* 🛡️ **Admin dashboard** — verify companies, remove fake listings
+* 🐳 **Docker deployment** — one-command containerized setup
+* ⚙️ **CI/CD via GitHub Actions** — automated testing and deployment
+* 🔔 **Real-time notifications** via WebSockets
+* 🏅 **Company verification badges** — trusted employer system
 
 ---
 
-## ◈ What You Learn Building This
+## 🧾 **What You Learn Building This**
 
 ```
 Backend
-  ├── REST API design — routes, methods, status codes, query params
-  ├── JWT authentication — token creation, decoding, expiry, guards
-  ├── Role-based access control — decorators on every protected endpoint
+  ├── REST API design with FastAPI — routes, methods, query params
+  ├── JWT authentication — token creation, decoding, expiry
+  ├── Role-based access control — guards on every protected endpoint
   ├── SQLAlchemy ORM — models, foreign keys, relationships, queries
   ├── Pydantic — request validation, response shaping, nested schemas
-  └── File handling — multipart form uploads, path storage, static serving
+  └── File handling — multipart uploads, path storage, static serving
 
 Frontend
-  ├── Single-page application — no React, no Vue, just JavaScript
+  ├── Single-page application — no React, no Vue, plain JavaScript
   ├── fetch() API — GET, POST, PUT, DELETE with auth headers
   ├── localStorage — token, role, user_id across page reloads
-  └── DOM manipulation — rendering cards, modals, dashboards dynamically
-
-Automation (n8n)
-  ├── Webhook-driven workflows — trigger on API events
-  ├── AI integration — OpenAI skill matching via HTTP node
-  ├── Multi-channel notifications — Gmail + Slack in one flow
-  └── Scheduled jobs — cron-based deadline reminders
+  └── DOM manipulation — rendering cards, modals, dashboards
 
 Real-World Skills
-  ├── Debugging real production errors — bcrypt, routing, redirects
-  ├── Third-party API integration — consuming The Muse REST API
+  ├── Debugging production errors — bcrypt, routing, redirect loops
+  ├── Third-party API integration — The Muse REST API
   ├── Database design — normalized tables, relationships, constraints
   └── Layered architecture — routers, schemas, models, core separated
 ```
 
 ---
 
-## ◈ Roadmap
+## 👥 **Development Team**
 
-- [ ] Email notifications when application status changes
-- [ ] AI-powered recommendations based on profile skills
-- [ ] Admin dashboard — verify companies, remove fake listings
-- [ ] Docker + docker-compose for one-command deployment
-- [ ] CI/CD pipeline via GitHub Actions
-- [ ] WebSocket real-time notifications
-- [ ] Company verification badges
-- [ ] n8n full workflow setup guide + exported JSON
-
----
+<br/>
 
 <div align="center">
 
-```
-╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║                      InternHub                           ║
-║                                                          ║
-║             Built to learn. Built to last.               ║
-║                                                          ║
-║    FastAPI · SQLAlchemy · JWT · Tailwind · The Muse      ║
-║                  n8n · OpenAI · bcrypt                   ║
-║                                                          ║
-╚══════════════════════════════════════════════════════════╝
-```
+| | Name | Role | LinkedIn |
+|---|---|---|---|
+| 🔧 | **Ahmad** | Backend & API Design | [![LinkedIn](https://img.shields.io/badge/Connect-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ahmad0763) |
 
 </div>
+
+<br/>
+
+---
+
+## 🤝 **Contributing**
+
+Contributions, feature ideas, and feedback are welcome!
+
+```bash
+# 1. Fork the repository
+# 2. Create your feature branch
+git checkout -b feature/your-feature-name
+
+# 3. Commit your changes
+git commit -m "Add: your feature description"
+
+# 4. Push to your branch
+git push origin feature/your-feature-name
+
+# 5. Open a Pull Request
+```
+
+<div align="center">
+
+<br/>
+
+[![Star This Repo](https://img.shields.io/badge/⭐_Star_This_Repo-Click_Here-gold?style=for-the-badge&logo=github&logoColor=white)](https://github.com)
+[![Watch Updates](https://img.shields.io/badge/👀_Watch_Updates-Coming_Soon-3b82f6?style=for-the-badge&logo=github&logoColor=white)](https://github.com)
+
+</div>
+
+<br/>
+
+---
+
+## 📧 **Contact**
+
+<div align="center">
+
+[![LinkedIn](https://img.shields.io/badge/Ahmad_—_LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ahmad0763)
+[![GitHub](https://img.shields.io/badge/GitHub_—_Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com)
+[![Email](https://img.shields.io/badge/Email_—_Coming_Soon-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:)
+
+</div>
+
+<br/>
+
+---
+
+## 📜 **License**
+
+This project is licensed under the **MIT License** — open for learning, innovation, and collaboration.
+
+```
+MIT License — free to use, modify, and distribute with attribution.
+See LICENSE.md for full terms.
+```
+
+<p align="center">
+  <a href="#"><img src="https://img.shields.io/badge/View_License-MIT-black?style=for-the-badge&logo=open-source-initiative" /></a>
+</p>
+
+---
+
+## 🌟 **Acknowledgements**
+
+Special thanks to:
+- **FastAPI** team for the incredible Python web framework
+- **The Muse** for providing a free, open job listings API
+- **SQLAlchemy** for the powerful Python ORM
+- **Tailwind CSS** for utility-first styling without a build step
+- The open-source community for tools, inspiration, and feedback
+
+---
+
+<p align="center">
+  <b>🚀 Bringing student-focused internship discovery to life!</b><br>
+  <sub>Combining the power of FastAPI, JWT auth, and The Muse API in one platform</sub>
+</p>
+
+<p align="center">
+  Made with ❤️ by Ahmad
+</p>
+
+---
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Built_With-Python-3776AB?style=flat&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Powered_By-FastAPI-009688?style=flat&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/Made_For-Students-gold?style=flat&logo=graduation-cap&logoColor=white" />
+</p>
